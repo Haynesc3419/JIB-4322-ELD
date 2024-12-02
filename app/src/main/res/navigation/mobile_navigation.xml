@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/mobile_navigation"
+        app:startDestination="@+id/nav_profile">
+
+    <fragment
+            android:id="@+id/nav_profile"
+            android:name="com.michelin.connectedfleet.eld.ui.profile.ProfileFragment"
+            android:label="@string/menu_transform"
+            tools:layout="@layout/fragment_profile" />
+
+    <fragment
+            android:id="@+id/nav_home"
+            android:name="com.michelin.connectedfleet.eld.ui.home.HomeFragment"
+            android:label="@string/menu_reflow"
+            tools:layout="@layout/fragment_home" />
+
+    <fragment
+            android:id="@+id/nav_status"
+            android:name="com.michelin.connectedfleet.eld.ui.status.StatusFragment"
+            android:label="@string/menu_slideshow"
+            tools:layout="@layout/fragment_status" />
+
+    <fragment
+            android:id="@+id/nav_settings"
+            android:name="com.michelin.connectedfleet.eld.ui.settings.SettingsFragment"
+            android:label="@string/menu_settings"
+            tools:layout="@layout/fragment_settings" />
+</navigation>
