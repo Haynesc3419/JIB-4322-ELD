@@ -10,7 +10,7 @@ Backend - MongoDB, Java
 # Release Notes
 ## v0.0.0
 ### Features
-This release implemented tthree main pages, authentication, dashboard, status change. 
+This release implemented three main pages, authentication, dashboard, status change. 
 * Authentication
   * Temporary page utilizing a username and password to login into application and populate the information
 * Dashboard
