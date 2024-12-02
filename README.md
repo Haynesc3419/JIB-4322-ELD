@@ -10,5 +10,13 @@ Backend - MongoDB, Java
 # Release Notes
 ## v0.0.0
 ### Features
-This release implemented the status changing feature for the drivers. Direct access to the dashboard to visualize static hours and possibility to change status to driving, on break, loading, unloading, and personal conveyance. Also, a temporary authentication page was implemented to simulate the process of providing a login to populate the information on the dashboard.
+This release implemented tthree main pages, authentication, dashboard, status change. 
+* Authentication
+  * Temporary page utilizing a username and password to login into application and populate the information
+* Dashboard
+  * Showcases hours remaining in each sector of FMCSA regulations hours like driving, break, and total per day
+  * Has a feature to change the current status of the driver on the job
+* Status Change
+  * Feature to change the status for fleet managers to see and log the proper hours
+  * Options to change are Driving, On Break, Personal Conveyance, Loading, Unloading
 
