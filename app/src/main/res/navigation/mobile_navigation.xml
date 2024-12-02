@@ -3,25 +3,25 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/mobile_navigation"
-        app:startDestination="@+id/nav_transform">
+        app:startDestination="@+id/nav_profile">
 
     <fragment
-            android:id="@+id/nav_transform"
-            android:name="com.michelin.connectedfleet.eld.ui.transform.TransformFragment"
+            android:id="@+id/nav_profile"
+            android:name="com.michelin.connectedfleet.eld.ui.profile.ProfileFragment"
             android:label="@string/menu_transform"
-            tools:layout="@layout/fragment_transform" />
+            tools:layout="@layout/fragment_profile" />
 
     <fragment
-            android:id="@+id/nav_reflow"
-            android:name="com.michelin.connectedfleet.eld.ui.reflow.ReflowFragment"
+            android:id="@+id/nav_home"
+            android:name="com.michelin.connectedfleet.eld.ui.home.HomeFragment"
             android:label="@string/menu_reflow"
-            tools:layout="@layout/fragment_reflow" />
+            tools:layout="@layout/fragment_home" />
 
     <fragment
-            android:id="@+id/nav_slideshow"
-            android:name="com.michelin.connectedfleet.eld.ui.slideshow.SlideshowFragment"
+            android:id="@+id/nav_status"
+            android:name="com.michelin.connectedfleet.eld.ui.status.StatusFragment"
             android:label="@string/menu_slideshow"
-            tools:layout="@layout/fragment_slideshow" />
+            tools:layout="@layout/fragment_status" />
 
     <fragment
             android:id="@+id/nav_settings"
