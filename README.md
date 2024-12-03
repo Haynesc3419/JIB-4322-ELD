@@ -12,7 +12,7 @@ Backend - MongoDB, Java
 ### Features
 This release implemented three main pages, authentication, dashboard, and status change. 
 * Authentication
-  * Temporary page utilizing a username and password to login into the application and populate the information
+  * Temporary page utilizing a username and password to log into the application and populate the information
 * Dashboard
   * Showcases hours remaining in each sector of FMCSA regulations hours like driving, break, and total per day
   * Has a feature to change the current status of the driver on the job
