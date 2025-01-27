@@ -8,6 +8,18 @@ Frontend - Android Studio/Java \
 Backend - MongoDB, Java
 
 # Release Notes
+
+## v0.1.0
+### Features
+* Log in using a username and password to allow for secure account access. 
+* See current driving status to verify compliance with regulations. 
+* Display the hours remaining for the day so the driver can plan his or her schedule effectively. 
+* Display my remaining hours using color codes (blue, yellow, red) To easily identify when the driver is approaching or exceeding limits.
+### Bug Fixes
+* Fixed bug where app would not load due to MongoDB incompatabilities.
+## Known Issues
+* None cto our knowledge currently
+
 ## v0.0.0
 ### Features
 This release implemented three main pages, authentication, dashboard, and status change. 
