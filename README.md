@@ -17,7 +17,7 @@ Backend - MongoDB, Java
 * Display my remaining hours using color codes (blue, yellow, red) To easily identify when the driver is approaching or exceeding limits.
 ### Bug Fixes
 * Fixed bug where app would not load due to MongoDB incompatabilities.
-## Known Issues
+### Known Issues
 * None to our knowledge currently
 
 ## v0.0.0
