@@ -30,12 +30,12 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginUserRequest loginUserRequest) {
-        if (userRepository.findByUsername(loginUserRequest.username()) != NULL) {
+        if (userRepository.findByUsername(loginUserRequest.username()) != null) {
             String passwordHash = passwordEncoder.encode(loginUserRequest.password());
             if (passwordHash == userRepository.findByUsername(loginUserRequest.username()).passwordHash()) {
                 return new ResponseEntity<>(HttpStatus.OK);
             }
         }
-        return NULL;
+        return null;
     }
 }
