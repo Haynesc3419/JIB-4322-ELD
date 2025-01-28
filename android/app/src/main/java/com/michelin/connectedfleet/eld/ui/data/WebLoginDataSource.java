@@ -46,6 +46,7 @@ public class WebLoginDataSource implements LoginDataSource {
                     @Override
                     public void onResponse(JSONObject response) {
                         callback.onSuccess(new Result.Success<>(null)); 
+                    }
                 },
                 new Response.ErrorListener() {
                     @Override
