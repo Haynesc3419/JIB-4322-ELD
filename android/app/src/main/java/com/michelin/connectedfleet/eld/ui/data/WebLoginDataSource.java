@@ -9,6 +9,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.michelin.connectedfleet.eld.ui.data.model.LoggedInUser;
+import java.io.IOException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,17 +45,12 @@ public class WebLoginDataSource implements LoginDataSource {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        try {
-                            callback.onSuccess(new Result.Success<>(null));
-                        } catch (JSONException e) {
-                            callback.onError(new Result.Error<>(IOException("Error parsing server response", e)));
-                        }
-                    }
+                        callback.onSuccess(new Result.Success<>(null)); 
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        callback.onError(new Result.Error<>(IOException("Login request failed: " + error.getMessage(), error)));
+                        callback.onError(new Result.Error(new IOException("Login request failed: " + error.getMessage(), error)));
                     }
                 }
         );
