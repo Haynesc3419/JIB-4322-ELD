@@ -25,7 +25,16 @@ public class UserController {
         String passwordHash = passwordEncoder.encode(createUserRequest.password());
         User newUser = new User(createUserRequest.username(), passwordHash, createUserRequest.firstName(), createUserRequest.lastName());
         userRepository.insert(newUser);
-
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    public ResponseEntity<String> get(@Valid @RequestBody LoginUserRequest loginUserRequest) {
+        if (userRepository.findByUsername(loginUserRequest.username()) != NULL) {
+            String passwordHash = passwordEncoder.encode(loginUserRequest.password());
+            if (passwordHash == userRepository.findByUsername(loginUserRequest.username()).passwordHash()) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+        }
+        return NULL;
     }
 }
