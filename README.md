@@ -9,6 +9,17 @@ Backend - MongoDB, Java
 
 # Release Notes
 
+## v0.2.0
+### Features
+* Switch between different driving statuses (personal conveyance, sleeper berth, etc) to log activities accurately. 
+* View and filter my historic driving logs to ensure correctness. 
+* Add colorblind accommodating features on the driver interface so colorblind drivers can still gather all relevant information (including hours remaining, warnings, etc). 
+*As a driver, I want my app to be aware of legal restrictions and allow me to review them. 
+### Bug Fixes
+* Fixed bug where app would not load due to MongoDB incompatabilities.
+### Known Issues
+* None to our knowledge currently
+
 ## v0.1.0
 ### Features
 * Log in using a username and password to allow for secure account access. 
