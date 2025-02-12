@@ -18,7 +18,7 @@ Backend - MongoDB, Java
 ### Bug Fixes
 * Fixed bug where app would not load due to MongoDB incompatabilities.
 ### Known Issues
-* None to our knowledge currently
+* App cannot call backend currently.
 
 ## v0.1.0
 ### Features
