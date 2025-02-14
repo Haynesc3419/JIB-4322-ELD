@@ -1,5 +1,7 @@
 package com.michelin.connectedfleet.eld.ui.home;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,17 +21,44 @@ import com.michelin.connectedfleet.eld.MainActivity;
 import com.michelin.connectedfleet.eld.R;
 import com.michelin.connectedfleet.eld.databinding.FragmentHomeBinding;
 import com.michelin.connectedfleet.eld.databinding.ItemLogsBinding;
+import com.michelin.connectedfleet.eld.ui.data.LogEntryService;
+import com.michelin.connectedfleet.eld.ui.data.UserService;
+import com.michelin.connectedfleet.eld.ui.data.retrofitinterface.GetLogEntryResponseItem;
 import com.michelin.connectedfleet.eld.ui.status.StatusViewModel;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
+
+    private LogEntryService logsService;
+
+    public HomeFragment() {
+        super();
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://10.0.2.2:8080/logs/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        logsService = retrofit.create(LogEntryService.class);
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -38,9 +67,33 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
         RecyclerView recyclerView = binding.recyclerviewLogs;
-        ListAdapter<Date, LogsViewHolder> adapter = new LogsAdapter(getResources().getConfiguration().getLocales().get(0));
+        ListAdapter<GetLogEntryResponseItem, LogsViewHolder> adapter = new LogsAdapter(getResources().getConfiguration().getLocales().get(0));
         recyclerView.setAdapter(adapter);
-        homeViewModel.getDates().observe(getViewLifecycleOwner(), adapter::submitList);
+        SharedPreferences prefs = getContext().getSharedPreferences("tokens", Context.MODE_PRIVATE);
+        String token = prefs.getString("token", null);
+        String cookieHeader = String.format("JSESSIONID=%s", token);
+        Call<List<GetLogEntryResponseItem>> logEntriesRequest = logsService.getLogEntries(cookieHeader);
+        logEntriesRequest.enqueue(new Callback<List<GetLogEntryResponseItem>>() {
+            @Override
+            public void onResponse(Call<List<GetLogEntryResponseItem>> call, Response<List<GetLogEntryResponseItem>> response) {
+                // Show today + 7 previous days
+                //
+                // adapter.submitList(response.body());
+                List<GetLogEntryResponseItem> entries = new ArrayList<>();
+                for (int i = 0; i < 3; i++) {
+                    Date date = new Date();
+                    date.setTime(date.getTime() - (30 * 60 * 1000));
+                    entries.add(new GetLogEntryResponseItem(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), "sampleStatus"));
+                }
+                adapter.submitList(entries);
+            }
+
+            @Override
+            public void onFailure(Call<List<GetLogEntryResponseItem>> call, Throwable throwable) {
+                return;
+            }
+        });
+        // homeViewModel.getDates().observe(getViewLifecycleOwner(), adapter::submitList);
 
         homeViewModel.hoursRemaining.breakHoursRemaining.observe(
                 getViewLifecycleOwner(),
@@ -74,7 +127,7 @@ public class HomeFragment extends Fragment {
         binding = null;
     }
 
-    private static class LogsAdapter extends androidx.recyclerview.widget.ListAdapter<Date, LogsViewHolder> {
+    private static class LogsAdapter extends androidx.recyclerview.widget.ListAdapter<GetLogEntryResponseItem, LogsViewHolder> {
         private static Locale locale;
 
         private static String convertDate(Date date) {
@@ -91,14 +144,14 @@ public class HomeFragment extends Fragment {
 
 
         protected LogsAdapter(Locale locale) {
-            super(new DiffUtil.ItemCallback<Date>() {
+            super(new DiffUtil.ItemCallback<>() {
                 @Override
-                public boolean areItemsTheSame(@NonNull Date oldItem, @NonNull Date newItem) {
+                public boolean areItemsTheSame(@NonNull GetLogEntryResponseItem oldItem, @NonNull GetLogEntryResponseItem newItem) {
                     return oldItem.equals(newItem);
                 }
 
                 @Override
-                public boolean areContentsTheSame(@NonNull Date oldItem, @NonNull Date newItem) {
+                public boolean areContentsTheSame(@NonNull GetLogEntryResponseItem oldItem, @NonNull GetLogEntryResponseItem newItem) {
                     return oldItem.equals(newItem);
                 }
             });
@@ -115,7 +168,9 @@ public class HomeFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull LogsViewHolder holder, int position) {
-            holder.textView.setText(convertDate(getItem(position)));
+            GetLogEntryResponseItem item = getItem(position);
+            String text = String.format("%s (%s)", convertDate(Date.from(item.dateTime().atZone(ZoneId.systemDefault()).toInstant())), item.status());
+            holder.textView.setText(text);
         }
     }
 
@@ -128,3 +183,4 @@ public class HomeFragment extends Fragment {
         }
     }
 }
+

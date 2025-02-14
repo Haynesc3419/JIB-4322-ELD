@@ -1,7 +1,11 @@
 package com.michelin.connectedfleet.eld.ui.ui.login;
 
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Patterns;
 
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -11,13 +15,14 @@ import com.michelin.connectedfleet.eld.ui.data.LoginRepository;
 import com.michelin.connectedfleet.eld.ui.data.Result;
 import com.michelin.connectedfleet.eld.ui.data.model.LoggedInUser;
 
-public class LoginViewModel extends ViewModel {
+public class LoginViewModel extends AndroidViewModel {
 
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
     private LoginRepository loginRepository;
 
-    LoginViewModel(LoginRepository loginRepository) {
+    LoginViewModel(Application application, LoginRepository loginRepository) {
+        super(application);
         this.loginRepository = loginRepository;
     }
 
@@ -35,7 +40,9 @@ public class LoginViewModel extends ViewModel {
 
         if (result instanceof Result.Success) {
             LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
+            SharedPreferences prefs = getApplication().getSharedPreferences("tokens", Context.MODE_PRIVATE);
+            prefs.edit().putString("token", data.getToken()).apply();
+            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getUsername())));
         } else {
             loginResult.setValue(new LoginResult(R.string.login_failed));
         }
