@@ -5,19 +5,19 @@ package com.michelin.connectedfleet.eld.ui.data.model;
  */
 public class LoggedInUser {
 
-    private String userId;
-    private String displayName;
+    private String token;
+    private String username;
 
-    public LoggedInUser(String userId, String displayName) {
-        this.userId = userId;
-        this.displayName = displayName;
+    public LoggedInUser(String token, String username) {
+        this.token = token;
+        this.username = username;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getToken() {
+        return token;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getUsername() {
+        return username;
     }
 }

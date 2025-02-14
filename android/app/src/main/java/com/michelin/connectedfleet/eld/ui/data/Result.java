@@ -21,20 +21,20 @@ public class Result<T> {
     }
 
     // Success sub-class
-    public final static class Success<T> extends Result {
-        private T data;
+    public final static class Success<TInner> extends Result<TInner> {
+        private TInner data;
 
-        public Success(T data) {
+        public Success(TInner data) {
             this.data = data;
         }
 
-        public T getData() {
+        public TInner getData() {
             return this.data;
         }
     }
 
     // Error sub-class
-    public final static class Error extends Result {
+    public final static class Error<TInner> extends Result<TInner> {
         private Exception error;
 
         public Error(Exception error) {

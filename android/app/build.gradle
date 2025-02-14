@@ -46,7 +46,9 @@ dependencies {
     implementation libs.navigation.fragment
     implementation libs.navigation.ui
     implementation libs.annotation
-    implementation 'com.android.volley:volley:1.2.1'
+    implementation libs.volley
+    implementation libs.retrofit
+    implementation libs.converter.gson
     // implementation libs.mongodb.driver.sync
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
