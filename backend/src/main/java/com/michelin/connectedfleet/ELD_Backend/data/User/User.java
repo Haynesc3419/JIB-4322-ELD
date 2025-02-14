@@ -1,4 +1,4 @@
-package com.michelin.connectedfleet.ELD_Backend.data;
+package com.michelin.connectedfleet.ELD_Backend.data.User;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -6,7 +6,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 
 @Document("users")
 public final class User implements UserDetails {
