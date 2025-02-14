@@ -1,0 +1,26 @@
+meta {
+  name: Login User
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/users/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "user01@example.com",
+    "password": "{{password}}"
+  }
+}
+
+script:post-response {
+  const cookies = res.getHeader('set-cookie');
+  
+  if(cookies) {
+    bru.setVar("cookie", cookies.join('; '));
+  }
+}

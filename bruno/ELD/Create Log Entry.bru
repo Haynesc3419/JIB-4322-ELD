@@ -1,0 +1,31 @@
+meta {
+  name: Create Log Entry
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://localhost:8080/logs/insertEntry
+  body: json
+  auth: none
+}
+
+headers {
+  JSESSIONID: 25CD49B38AB0B09E27A0E638BF91FAD1
+}
+
+body:json {
+  {
+    "status": "testStatus",
+    "token": "B56B3FB6F11A14780C7986312448572C"
+  }
+}
+
+script:pre-request {
+  const cookie = bru.getVar("cookie");
+  
+  if(cookie) {
+    req.setHeader("Cookie", cookie)
+  }
+  
+}
