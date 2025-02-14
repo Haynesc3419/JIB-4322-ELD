@@ -5,3 +5,4 @@ import org.springframework.data.annotation.Id;
 
 public record LoginUserRequest(@NotBlank String username, @NotBlank String password) {
 }
+
