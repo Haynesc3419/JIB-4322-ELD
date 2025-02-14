@@ -12,7 +12,15 @@ post {
 
 body:json {
   {
-    "username": "user@example.com",
+    "username": "user01@example.com",
     "password": "{{password}}"
+  }
+}
+
+script:post-response {
+  const cookies = res.getHeader('set-cookie');
+  
+  if(cookies) {
+    bru.setVar("cookie", cookies.join('; '));
   }
 }

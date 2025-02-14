@@ -1,4 +1,4 @@
-package com.michelin.connectedfleet.ELD_Backend.data;
+package com.michelin.connectedfleet.ELD_Backend.data.User;
 
 public class CreateUserResponse {
     String username;
