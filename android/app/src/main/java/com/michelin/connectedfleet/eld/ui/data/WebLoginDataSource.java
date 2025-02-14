@@ -27,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class WebLoginDataSource implements LoginDataSource {
 
-    private static final String LOGIN_URL = "http://localhost:8080/users/login";
+    private static final String LOGIN_URL = "http://10.0.2.2:8080/users/login";
     private final RequestQueue requestQueue;
 
     private final UserService userService;
@@ -35,7 +35,7 @@ public class WebLoginDataSource implements LoginDataSource {
     public WebLoginDataSource(Context context) {
         this.requestQueue = Volley.newRequestQueue(context);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://localhost:8080/users/")
+                .baseUrl("http://10.0.2.2:8080/users/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
