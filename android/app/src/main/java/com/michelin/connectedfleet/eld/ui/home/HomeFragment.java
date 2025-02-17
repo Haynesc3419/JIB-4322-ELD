@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
@@ -199,6 +200,9 @@ public class HomeFragment extends Fragment {
         public LogsViewHolder(ItemLogsBinding binding) {
             super(binding.getRoot());
             textView = binding.textViewItemLogsDate;
+            binding.getRoot().setLayoutParams(new ConstraintLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            );
         }
     }
 }
