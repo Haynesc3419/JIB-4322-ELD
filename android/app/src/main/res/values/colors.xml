@@ -11,9 +11,13 @@
     <color name="primary_blue">#27509b</color>
     <color name="light_blue_1">#d7e7fa</color>
 
-    <color name="status_valid">#005AB5</color>
-    <color name="status_warning">#FFC20A</color>
-    <color name="status_danger">#DC3220</color>
+    <color name="status_valid">#2e7d32</color>
+    <color name="status_warning">#f9a825</color>
+    <color name="status_danger">#b71c1c</color>
+
+    <color name="color_blind_status_valid">#005AB5</color>
+    <color name="color_blind_status_warning">#FFC20A</color>
+    <color name="color_blind_status_danger">#DC3220</color>
 
     <color name="gray_light_20">#cccccc</color>
 </resources>

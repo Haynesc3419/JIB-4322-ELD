@@ -1,8 +1,11 @@
 package com.michelin.connectedfleet.eld.ui.home;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
@@ -21,14 +25,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 import com.michelin.connectedfleet.eld.DriverStatus;
-import com.michelin.connectedfleet.eld.MainActivity;
 import com.michelin.connectedfleet.eld.R;
 import com.michelin.connectedfleet.eld.databinding.FragmentHomeBinding;
 import com.michelin.connectedfleet.eld.databinding.ItemLogsBinding;
-import com.michelin.connectedfleet.eld.ui.data.LogEntry;
 import com.michelin.connectedfleet.eld.ui.data.LogEntryService;
 import com.michelin.connectedfleet.eld.ui.data.LoggedDay;
 import com.michelin.connectedfleet.eld.ui.data.retrofitinterface.GetLogEntryResponseItem;
@@ -38,7 +41,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -53,56 +55,90 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.internal.EverythingIsNonNull;
 
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
-
+    private boolean isColorBlindMode;
+    private SharedPreferences.OnSharedPreferenceChangeListener prefsListener;
     private LogEntryService logsService;
 
     public HomeFragment() {
         super();
 
+        // Set up Retrofit & GSON to parse LocalDateTime if needed
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, typeOfT, context) -> {
-            return LocalDateTime.parse(json.getAsString());
-        });
-
-        GsonConverterFactory gsonConverterFactory = GsonConverterFactory.create(gsonBuilder.create());
+        gsonBuilder.registerTypeAdapter(
+                LocalDateTime.class,
+                (JsonDeserializer<LocalDateTime>) (json, typeOfT, context) -> LocalDateTime.parse(json.getAsString())
+        );
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://10.0.2.2:8080/logs/")
-                .addConverterFactory(gsonConverterFactory)
+                .addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()))
                 .build();
 
         logsService = retrofit.create(LogEntryService.class);
     }
 
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState
+    ) {
         HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        // 1) Read colorBlindMode from SharedPreferences
+        SharedPreferences prefs = requireContext().getSharedPreferences("settings", Context.MODE_PRIVATE);
+        isColorBlindMode = prefs.getBoolean("colorBlindMode", false);
+
+        // 2) Set up a listener so we know when colorBlindMode changes
+        prefsListener = (sharedPrefs, key) -> {
+            if ("colorBlindMode".equals(key)) {
+                isColorBlindMode = sharedPrefs.getBoolean(key, false);
+                applyColorBlindMode();
+                Log.d("HomeFragment", "colorBlindMode changed -> " + isColorBlindMode);
+            }
+        };
+        prefs.registerOnSharedPreferenceChangeListener(prefsListener);
+
+        // Set up RecyclerView and adapter
         RecyclerView recyclerView = binding.recyclerviewLogs;
-        ListAdapter<LoggedDay, LogsViewHolder> adapter = new LogsAdapter(getResources().getConfiguration().getLocales().get(0), null);
+        ListAdapter<LoggedDay, LogsViewHolder> adapter =
+                new LogsAdapter(getResources().getConfiguration().getLocales().get(0), null);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
-        SharedPreferences prefs = getContext().getSharedPreferences("tokens", Context.MODE_PRIVATE);
-        String token = prefs.getString("token", null);
+        // Retrieve token, fetch logs from server if needed
+        SharedPreferences pref = getContext().getSharedPreferences("tokens", Context.MODE_PRIVATE);
+        String token = pref.getString("token", null);
         String cookieHeader = String.format("JSESSIONID=%s", token);
-        Call<List<GetLogEntryResponseItem>> logEntriesRequest = logsService.getLogEntries(cookieHeader);
 
+        Call<List<GetLogEntryResponseItem>> logEntriesRequest = logsService.getLogEntries(cookieHeader);
         logEntriesRequest.enqueue(new Callback<>() {
             @Override
-            @EverythingIsNonNull
-            public void onResponse(Call<List<GetLogEntryResponseItem>> call, Response<List<GetLogEntryResponseItem>> response) {
+            public void onResponse(
+                    Call<List<GetLogEntryResponseItem>> call,
+                    Response<List<GetLogEntryResponseItem>> response
+            ) {
+                if (!response.isSuccessful() || response.body() == null) {
+                    Log.e("HomeFragment", "Failed to retrieve log entries: null or unsuccessful response.");
+                    return;
+                }
+
+                // Sort logs by date
                 Map<LocalDate, LoggedDay> logsByDate = new HashMap<>();
                 for (GetLogEntryResponseItem item : response.body()) {
                     LocalDate date = item.dateTime().toLocalDate();
-                    LoggedDay day = logsByDate.getOrDefault(date, new LoggedDay(date, new ArrayList<>(), Locale.getDefault()));
+                    LoggedDay day = logsByDate.getOrDefault(
+                            date,
+                            new LoggedDay(date, new ArrayList<>(), Locale.getDefault())
+                    );
                     logsByDate.put(date, day);
                     day.logEntries().add(item);
                 }
@@ -113,13 +149,12 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<GetLogEntryResponseItem>> call, Throwable throwable) {
-                Log.d("uh oh", "oops!!!");
+            public void onFailure(Call<List<GetLogEntryResponseItem>> call, Throwable t) {
+                Log.d("HomeFragment", "Could not fetch log entries: " + t.getMessage());
             }
         });
-        // homeViewModel.getDates().observe(getViewLifecycleOwner(), adapter::submitList);
 
-
+        // Setup Observers for the circular progress bars
         homeViewModel.hoursRemaining.breakHoursRemaining.observe(
                 getViewLifecycleOwner(),
                 homeViewModel.hoursRemaining.createObserver(binding.progressHoursRemainingBreak, binding.textHoursRemainingBreak)
@@ -133,11 +168,13 @@ public class HomeFragment extends Fragment {
                 homeViewModel.hoursRemaining.createObserver(binding.progressHoursRemainingDayReset, binding.textHoursRemainingDayReset)
         );
 
+        // Display the driver's current status
         TextView currentStatus = binding.textviewHomeCurrentStatus;
         StatusViewModel.getStatus().observe(getViewLifecycleOwner(), driverStatus -> {
             currentStatus.setText(getResources().getTextArray(R.array.statuses)[driverStatus.ordinal()]);
         });
 
+        // Button to change status
         Button changeStatusButton = binding.homeButtonChangeStatus;
         changeStatusButton.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -147,8 +184,10 @@ public class HomeFragment extends Fragment {
                 StatusViewModel.setStatus(DriverStatus.values()[which]);
             });
             builder.show();
-            // MainActivity.bottomNavigationView.setSelectedItemId(R.id.nav_status);
         });
+
+        // Make sure the circles are colored properly on first load
+        applyColorBlindMode();
 
         return root;
     }
@@ -156,27 +195,73 @@ public class HomeFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
+        // Unregister the SharedPreferences listener
+        if (prefsListener != null) {
+            requireContext().getSharedPreferences("settings", Context.MODE_PRIVATE)
+                    .unregisterOnSharedPreferenceChangeListener(prefsListener);
+        }
         binding = null;
     }
 
-    private static class LogsAdapter extends androidx.recyclerview.widget.ListAdapter<LoggedDay, LogsViewHolder> {
+    @Override
+    public void onResume() {
+        super.onResume();
+        // If the user toggled color blind mode on another screen, re-check
+        isColorBlindMode = requireContext()
+                .getSharedPreferences("settings", Context.MODE_PRIVATE)
+                .getBoolean("colorBlindMode", false);
+
+        applyColorBlindMode();
+    }
+
+    /**
+     * Applies the appropriate colors to the 3 CircularProgressIndicator circles
+     * based on whether color-blind mode is on or off.
+     */
+    private void applyColorBlindMode() {
+        if (binding == null) return; // safety check
+
+        CircularProgressIndicator breakIndicator = binding.progressHoursRemainingBreak;
+        CircularProgressIndicator drivingIndicator = binding.progressHoursRemainingDriving;
+        CircularProgressIndicator dayResetIndicator = binding.progressHoursRemainingDayReset;
+
+        Context context = requireContext();
+        if (isColorBlindMode) {
+            // Color-blind friendly colors
+            breakIndicator.setIndicatorColor(
+                    ContextCompat.getColor(context, R.color.color_blind_status_valid)
+            );
+            drivingIndicator.setIndicatorColor(
+                    ContextCompat.getColor(context, R.color.color_blind_status_warning)
+            );
+            dayResetIndicator.setIndicatorColor(
+                    ContextCompat.getColor(context, R.color.color_blind_status_danger)
+            );
+        } else {
+            // Default colors
+            breakIndicator.setIndicatorColor(
+                    ContextCompat.getColor(context, R.color.status_valid)
+            );
+            drivingIndicator.setIndicatorColor(
+                    ContextCompat.getColor(context, R.color.status_warning)
+            );
+            dayResetIndicator.setIndicatorColor(
+                    ContextCompat.getColor(context, R.color.status_danger)
+            );
+        }
+    }
+
+    // -----------------------
+    // RecyclerView Adapter
+    // -----------------------
+    private static class LogsAdapter extends ListAdapter<LoggedDay, LogsViewHolder> {
+
         private List<LoggedDay> days;
         private static Locale locale;
 
-        private static String convertDate(Date date) {
-            String convertedDate = DateFormat.getDateInstance().format(date);
-
-            long timeSince = new Date().getTime() - date.getTime();
-            if (TimeUnit.DAYS.convert(timeSince, TimeUnit.MILLISECONDS) < 7) {
-                String dayOfWeek = new SimpleDateFormat("EEEE", locale).format(date);
-                convertedDate = dayOfWeek + " (" + convertedDate + ")";
-            }
-
-            return convertedDate;
-        }
-
         protected LogsAdapter(Locale locale, List<LoggedDay> days) {
-            super(new DiffUtil.ItemCallback<>() {
+            super(new DiffUtil.ItemCallback<LoggedDay>() {
                 @Override
                 public boolean areItemsTheSame(@NonNull LoggedDay oldItem, @NonNull LoggedDay newItem) {
                     return oldItem.equals(newItem);
@@ -187,7 +272,6 @@ public class HomeFragment extends Fragment {
                     return oldItem.equals(newItem);
                 }
             });
-
             LogsAdapter.locale = locale;
             if (days != null) {
                 this.days = days;
@@ -202,16 +286,17 @@ public class HomeFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            if (days == null) {
-                return 0;
-            }
-            return days.size();
+            return (days == null) ? 0 : days.size();
         }
 
         @NonNull
         @Override
         public LogsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            ItemLogsBinding binding = ItemLogsBinding.inflate(LayoutInflater.from(parent.getContext()));
+            ItemLogsBinding binding = ItemLogsBinding.inflate(
+                    LayoutInflater.from(parent.getContext()),
+                    parent,
+                    false
+            );
             return new LogsViewHolder(binding);
         }
 
@@ -235,8 +320,11 @@ public class HomeFragment extends Fragment {
             calendarMonthView = binding.textViewItemLogsDateMonth;
             detailsView = binding.textViewDetails;
 
-            binding.getRoot().setLayoutParams(new ConstraintLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            binding.getRoot().setLayoutParams(
+                    new ConstraintLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
             );
         }
     }
