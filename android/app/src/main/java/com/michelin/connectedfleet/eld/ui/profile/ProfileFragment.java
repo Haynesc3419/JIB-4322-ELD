@@ -46,9 +46,6 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        String username = "foo@email.com";
-        String full_name = "bar foo";
-
         TextView usernameView = binding.profileUsername;
         TextView nameView = binding.profileName;
         binding.regulationsButton.setOnClickListener(v -> {
