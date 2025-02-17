@@ -1,5 +1,6 @@
 package com.michelin.connectedfleet.eld.ui.home;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
+import com.michelin.connectedfleet.eld.DriverStatus;
 import com.michelin.connectedfleet.eld.MainActivity;
 import com.michelin.connectedfleet.eld.R;
 import com.michelin.connectedfleet.eld.databinding.FragmentHomeBinding;
@@ -138,7 +140,14 @@ public class HomeFragment extends Fragment {
 
         Button changeStatusButton = binding.homeButtonChangeStatus;
         changeStatusButton.setOnClickListener(v -> {
-            MainActivity.bottomNavigationView.setSelectedItemId(R.id.nav_status);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Change Status");
+            builder.setItems(R.array.statuses, (dialog, which) -> {
+                dialog.dismiss();
+                StatusViewModel.setStatus(DriverStatus.values()[which]);
+            });
+            builder.show();
+            // MainActivity.bottomNavigationView.setSelectedItemId(R.id.nav_status);
         });
 
         return root;

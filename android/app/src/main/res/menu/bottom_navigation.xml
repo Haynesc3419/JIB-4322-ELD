@@ -12,9 +12,5 @@
                 android:id="@+id/nav_home"
                 android:icon="@drawable/home_24px"
                 android:title="@string/nav_home" />
-        <item
-                android:id="@+id/nav_status"
-                android:icon="@drawable/local_shipping_24px"
-                android:title="@string/nav_status" />
     </group>
 </menu>

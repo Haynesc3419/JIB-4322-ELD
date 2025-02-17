@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navigationView = binding.navView;
         if (navigationView != null) {
             mAppBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.nav_profile, R.id.nav_home, R.id.nav_status, R.id.nav_settings)
+                    R.id.nav_profile, R.id.nav_home)
                     .setOpenableLayout(binding.drawerLayout)
                     .build();
             NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = binding.appBarMain.contentMain.bottomNavView;
         if (bottomNavigationView != null) {
             mAppBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.nav_profile, R.id.nav_home, R.id.nav_status)
+                    R.id.nav_profile, R.id.nav_home)
                     .build();
             NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
             NavigationUI.setupWithNavController(bottomNavigationView, navController);
