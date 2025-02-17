@@ -17,6 +17,7 @@
         android:orientation="vertical"
         android:gravity="center_horizontal">
 
+        <!-- Profile Image -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/profile_image"
             android:layout_width="120dp"
@@ -25,13 +26,40 @@
             android:scaleType="centerCrop"
             android:layout_marginBottom="16dp"/>
 
+        <!-- Profile Name -->
+        <TextView
+            android:id="@+id/profile_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="John Doe"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="8dp"/>
+
         <!-- Profile Email -->
         <TextView
-            android:id="@+id/profile_email"
+            android:id="@+id/profile_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="johndoe@example.com"
             android:textSize="16sp"
             android:textColor="@android:color/darker_gray"/>
+
+        <!-- Button with Rounded Corners and Modern Look -->
+        <Button
+            android:id="@+id/regulations_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Regulations"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@android:color/holo_blue_dark">
+
+        </Button>  <!-- Blue background --><!-- Shadow effect for elevation -->
     </LinearLayout>
 </LinearLayout>
+
