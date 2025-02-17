@@ -62,6 +62,18 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/info")
+    public ResponseEntity<?> info(HttpSession session) {
+        if (session.isNew()) {
+            session.invalidate();
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        User user = userRepository.findByUsername((String) session.getAttribute("username"));
+        GetUserInfoResponse response = new GetUserInfoResponse(user.getUsername(), user.getFirstName(), user.getLastName());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpSession session) {
         session.invalidate();
