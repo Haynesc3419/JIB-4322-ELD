@@ -1,4 +1,4 @@
-package com.michelin.connectedfleet.eld.ui.ui.login;
+package com.michelin.connectedfleet.eld.ui.login;
 
 import androidx.annotation.Nullable;
 

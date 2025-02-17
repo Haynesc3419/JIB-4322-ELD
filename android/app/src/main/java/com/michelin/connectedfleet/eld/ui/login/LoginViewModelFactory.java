@@ -1,4 +1,4 @@
-package com.michelin.connectedfleet.eld.ui.ui.login;
+package com.michelin.connectedfleet.eld.ui.login;
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -8,7 +8,6 @@ import android.app.Application;
 import android.content.Context;
 import com.michelin.connectedfleet.eld.ui.data.WebLoginDataSource;
 import com.michelin.connectedfleet.eld.ui.data.LoginRepository;
-import com.michelin.connectedfleet.eld.ui.data.MongoLoginDataSource;
 
 /**
  * ViewModel provider factory to instantiate LoginViewModel.
