@@ -58,19 +58,15 @@ public class LoginViewModel extends AndroidViewModel {
     }
 
     // A placeholder username validation check
-    private boolean isUserNameValid(String username) {
-        if (username == null) {
+    private static boolean isUserNameValid(String username) {
+        if (username == null || username.trim().isEmpty()) {
             return false;
         }
-        if (username.contains("@")) {
-            return Patterns.EMAIL_ADDRESS.matcher(username).matches();
-        } else {
-            return !username.trim().isEmpty();
-        }
+        return Patterns.EMAIL_ADDRESS.matcher(username).matches();
     }
 
     // A placeholder password validation check
-    private boolean isPasswordValid(String password) {
+    private static boolean isPasswordValid(String password) {
         return password != null && password.trim().length() > 5;
     }
 }

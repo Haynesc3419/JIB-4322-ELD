@@ -1,0 +1,20 @@
+meta {
+  name: Get User Info
+  type: http
+  seq: 7
+}
+
+get {
+  url: http://localhost:8080/users/info
+  body: none
+  auth: none
+}
+
+script:pre-request {
+  const cookie = bru.getVar("cookie");
+  
+  if(cookie) {
+     req.setHeader("Cookie", cookie)
+  }
+  
+}

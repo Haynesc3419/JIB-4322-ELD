@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,9 +19,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.michelin.connectedfleet.eld.MainActivity;
 import com.michelin.connectedfleet.eld.databinding.ActivityLoginBinding;
 import com.michelin.connectedfleet.eld.R;
+import com.google.android.material.textfield.TextInputEditText;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -40,10 +41,11 @@ public class LoginActivity extends AppCompatActivity {
                 .get(LoginViewModel.class);
 
         setSupportActionBar(binding.toolbar);
-        final EditText usernameEditText = binding.username;
-        final EditText passwordEditText = binding.password;
+        final TextInputEditText usernameEditText = (TextInputEditText) binding.username;
+        final TextInputLayout usernameLayout = (TextInputLayout) binding.usernameLayout;
+        final TextInputEditText passwordEditText = (TextInputEditText) binding.password;
+        final TextInputLayout passwordLayout = (TextInputLayout) binding.passwordLayout;
         final Button loginButton = binding.login;
-        final ProgressBar loadingProgressBar = binding.loading;
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
@@ -53,10 +55,16 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 loginButton.setEnabled(loginFormState.isDataValid());
                 if (loginFormState.getUsernameError() != null) {
-                    usernameEditText.setError(getString(loginFormState.getUsernameError()));
+                    usernameLayout.setError(getString(loginFormState.getUsernameError()));
+                }
+                else {
+                    usernameLayout.setError(null);
                 }
                 if (loginFormState.getPasswordError() != null) {
-                    passwordEditText.setError(getString(loginFormState.getPasswordError()));
+                    passwordLayout.setError(getString(loginFormState.getPasswordError()));
+                }
+                else {
+                    passwordLayout.setError(null);
                 }
             }
         });
@@ -67,7 +75,6 @@ public class LoginActivity extends AppCompatActivity {
                 if (loginResult == null) {
                     return;
                 }
-                loadingProgressBar.setVisibility(View.GONE);
                 if (loginResult.getError() != null) {
                     showLoginFailed(loginResult.getError());
                 }
@@ -118,7 +125,6 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
             }
