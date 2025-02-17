@@ -3,6 +3,7 @@ package com.michelin.connectedfleet.eld.ui.home;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,7 +91,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<GetLogEntryResponseItem>> call, Throwable throwable) {
-                return;
+                Log.d("uh oh", "shit.");
             }
         });
         // homeViewModel.getDates().observe(getViewLifecycleOwner(), adapter::submitList);
