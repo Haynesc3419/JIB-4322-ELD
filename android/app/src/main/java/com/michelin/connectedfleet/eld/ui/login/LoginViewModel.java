@@ -1,4 +1,4 @@
-package com.michelin.connectedfleet.eld.ui.ui.login;
+package com.michelin.connectedfleet.eld.ui.login;
 
 import android.app.Application;
 import android.content.Context;
@@ -8,7 +8,6 @@ import android.util.Patterns;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.michelin.connectedfleet.eld.R;
 import com.michelin.connectedfleet.eld.ui.data.LoginRepository;
