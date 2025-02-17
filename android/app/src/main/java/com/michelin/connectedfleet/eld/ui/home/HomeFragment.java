@@ -17,13 +17,13 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
 import com.michelin.connectedfleet.eld.MainActivity;
 import com.michelin.connectedfleet.eld.R;
 import com.michelin.connectedfleet.eld.databinding.FragmentHomeBinding;
 import com.michelin.connectedfleet.eld.databinding.ItemLogsBinding;
 import com.michelin.connectedfleet.eld.ui.data.LogEntryService;
-import com.michelin.connectedfleet.eld.ui.data.UserService;
 import com.michelin.connectedfleet.eld.ui.data.retrofitinterface.GetLogEntryResponseItem;
 import com.michelin.connectedfleet.eld.ui.status.StatusViewModel;
 
@@ -31,7 +31,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -52,10 +51,16 @@ public class HomeFragment extends Fragment {
     public HomeFragment() {
         super();
 
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, typeOfT, context) -> {
+            return LocalDateTime.parse(json.getAsString());
+        });
+
+        GsonConverterFactory gsonConverterFactory = GsonConverterFactory.create(gsonBuilder.create());
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://10.0.2.2:8080/logs/")
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(gsonConverterFactory)
                 .build();
 
         logsService = retrofit.create(LogEntryService.class);
@@ -74,19 +79,10 @@ public class HomeFragment extends Fragment {
         String token = prefs.getString("token", null);
         String cookieHeader = String.format("JSESSIONID=%s", token);
         Call<List<GetLogEntryResponseItem>> logEntriesRequest = logsService.getLogEntries(cookieHeader);
-        logEntriesRequest.enqueue(new Callback<List<GetLogEntryResponseItem>>() {
+        logEntriesRequest.enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<GetLogEntryResponseItem>> call, Response<List<GetLogEntryResponseItem>> response) {
-                // Show today + 7 previous days
-                //
-                // adapter.submitList(response.body());
-                List<GetLogEntryResponseItem> entries = new ArrayList<>();
-                for (int i = 0; i < 3; i++) {
-                    Date date = new Date();
-                    date.setTime(date.getTime() - (30 * 60 * 1000));
-                    entries.add(new GetLogEntryResponseItem(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), "sampleStatus"));
-                }
-                adapter.submitList(entries);
+                adapter.submitList(response.body());
             }
 
             @Override

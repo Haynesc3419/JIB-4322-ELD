@@ -11,5 +11,4 @@ public class GetLogEntryResponseItem {
         this.dateTime = logEntry.getDateTime();
         this.status = logEntry.getStatus();
     }
-
 }
