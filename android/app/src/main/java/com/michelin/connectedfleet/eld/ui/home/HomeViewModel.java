@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.michelin.connectedfleet.eld.R;
+import com.michelin.connectedfleet.eld.ui.data.util.TimerManager;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -23,6 +24,9 @@ import java.util.List;
 public class HomeViewModel extends AndroidViewModel {
     private final LogsViewModel logs;
     public final HoursRemainingViewModel hoursRemaining;
+
+    public TimerManager timer = TimerManager.getInstance();
+    public float drivingRemaining;
 
     public HomeViewModel(Application app) {
         super(app);
@@ -62,9 +66,18 @@ public class HomeViewModel extends AndroidViewModel {
             this.dangerColor = application.getResources().getColor(R.color.status_danger, getApplication().getTheme());
             this.hourMinuteFormatString = application.getString(R.string.hour_minute);
 
+            timer.breakHoursRemaining = breakHoursRemaining;
+            timer.drivingHoursRemaining = drivingHoursRemaining;
+            timer.dayResetHoursRemaining = dayResetHoursRemaining;
+
             // Again - bad but fine for the demo
-            breakHoursRemaining.setValue(new HoursRemainingContainer(LocalTime.of(2, 0), LocalTime.of(0, 15)));
-            drivingHoursRemaining.setValue(new HoursRemainingContainer(LocalTime.of(8, 0), LocalTime.of(1, 17)));
+            int breakHours = (int) (timer.getTimeLeft("break") / (1000 * 60 * 60));
+            int breakMinutes = (int) ((timer.getTimeLeft("break") % (1000 * 60 * 60)) / (1000 * 60));
+            int drivingHours = (int) (timer.getTimeLeft("driving") / (1000 * 60 * 60));
+            int drivingMinutes = (int) ((timer.getTimeLeft("driving") % (1000 * 60 * 60)) / (1000 * 60));
+
+            breakHoursRemaining.setValue(new HoursRemainingContainer(LocalTime.of(2, 0), LocalTime.of(breakHours, breakMinutes)));
+            drivingHoursRemaining.setValue(new HoursRemainingContainer(LocalTime.of(8, 0), LocalTime.of(drivingHours, drivingMinutes)));
             dayResetHoursRemaining.setValue(new HoursRemainingContainer(LocalTime.of(23, 0), LocalTime.of(9, 22)));
         }
 
@@ -107,7 +120,7 @@ public class HomeViewModel extends AndroidViewModel {
             };
         }
 
-        public class HoursRemainingContainer {
+        public static class HoursRemainingContainer {
             public LocalTime limit;
             public LocalTime remaining;
 

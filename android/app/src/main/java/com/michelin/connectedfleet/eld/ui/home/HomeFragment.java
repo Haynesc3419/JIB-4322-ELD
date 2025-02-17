@@ -32,6 +32,7 @@ import com.michelin.connectedfleet.eld.ui.data.LogEntry;
 import com.michelin.connectedfleet.eld.ui.data.LogEntryService;
 import com.michelin.connectedfleet.eld.ui.data.LoggedDay;
 import com.michelin.connectedfleet.eld.ui.data.retrofitinterface.GetLogEntryResponseItem;
+import com.michelin.connectedfleet.eld.ui.data.util.TimerManager;
 import com.michelin.connectedfleet.eld.ui.status.StatusViewModel;
 
 import java.text.DateFormat;
@@ -80,7 +81,15 @@ public class HomeFragment extends Fragment {
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        TimerManager timer = TimerManager.getInstance();
+        timer.startTimer("break", 1 * 60 * 60 * 1000);
+        timer.pauseTimer("break");
+        timer.startTimer("driving", 1 * 60 * 60 * 1000);
+        timer.pauseTimer("driving");
+        timer.startTimer("dayReset", 5 * 60 * 60 * 1000);
+
         HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        homeViewModel.timer = timer;
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -136,10 +145,22 @@ public class HomeFragment extends Fragment {
         TextView currentStatus = binding.textviewHomeCurrentStatus;
         StatusViewModel.getStatus().observe(getViewLifecycleOwner(), driverStatus -> {
             currentStatus.setText(getResources().getTextArray(R.array.statuses)[driverStatus.ordinal()]);
+            if (currentStatus.getText().equals(getResources().getTextArray(R.array.statuses)[0])) {
+                timer.resumeTimer("driving");
+                timer.pauseTimer("break");
+            } else if (currentStatus.getText().equals(getResources().getTextArray(R.array.statuses)[1])) {
+                timer.resumeTimer("break");
+                timer.pauseTimer("driving");
+            } else {
+                timer.pauseTimer("break");
+                timer.pauseTimer("driving");
+            };
         });
 
         Button changeStatusButton = binding.homeButtonChangeStatus;
         changeStatusButton.setOnClickListener(v -> {
+            MainActivity.bottomNavigationView.setSelectedItemId(R.id.nav_status);
+
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Change Status");
             builder.setItems(R.array.statuses, (dialog, which) -> {
