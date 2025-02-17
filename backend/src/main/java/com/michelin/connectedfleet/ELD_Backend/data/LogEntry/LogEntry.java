@@ -18,4 +18,12 @@ public class LogEntry {
         this.dateTime = LocalDateTime.now();
         this.status = status;
     }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
 }

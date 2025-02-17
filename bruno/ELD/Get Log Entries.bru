@@ -1,0 +1,24 @@
+meta {
+  name: Get Log Entries
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:8080/logs
+  body: none
+  auth: none
+}
+
+headers {
+  ~Cookie: JSESSIONID=662CB78B6FF0D72C99B388D3091F8623; Path=/; HttpOnly
+}
+
+script:pre-request {
+  const cookie = bru.getVar("cookie");
+  
+  if(cookie) {
+     req.setHeader("Cookie", cookie)
+  }
+  
+}
