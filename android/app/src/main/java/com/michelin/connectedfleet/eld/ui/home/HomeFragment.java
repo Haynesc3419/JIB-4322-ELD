@@ -31,6 +31,8 @@ import com.michelin.connectedfleet.eld.databinding.ItemLogsBinding;
 import com.michelin.connectedfleet.eld.ui.data.LogEntry;
 import com.michelin.connectedfleet.eld.ui.data.LogEntryService;
 import com.michelin.connectedfleet.eld.ui.data.LoggedDay;
+import com.michelin.connectedfleet.eld.ui.data.retrofitinterface.CreateLogEntryRequest;
+import com.michelin.connectedfleet.eld.ui.data.retrofitinterface.CreateLogEntryResponse;
 import com.michelin.connectedfleet.eld.ui.data.retrofitinterface.GetLogEntryResponseItem;
 import com.michelin.connectedfleet.eld.ui.data.util.TimerManager;
 import com.michelin.connectedfleet.eld.ui.status.StatusViewModel;
@@ -165,7 +167,24 @@ public class HomeFragment extends Fragment {
             builder.setTitle("Change Status");
             builder.setItems(R.array.statuses, (dialog, which) -> {
                 dialog.dismiss();
-                StatusViewModel.setStatus(DriverStatus.values()[which]);
+                DriverStatus status = DriverStatus.values()[which];
+                StatusViewModel.setStatus(status);
+
+                SharedPreferences prefs2 = getContext().getSharedPreferences("tokens", Context.MODE_PRIVATE);
+                String token2 = prefs.getString("token", null);
+                String cookieHeader2 = String.format("JSESSIONID=%s", token);
+
+                logsService.insert(new CreateLogEntryRequest(status.toString(), cookieHeader2)).enqueue(new Callback<CreateLogEntryResponse>() {
+                    @Override
+                    public void onResponse(Call<CreateLogEntryResponse> call, Response<CreateLogEntryResponse> response) {
+                        return;
+                    }
+
+                    @Override
+                    public void onFailure(Call<CreateLogEntryResponse> call, Throwable throwable) {
+                        return;
+                    }
+                });
             });
             builder.show();
             // MainActivity.bottomNavigationView.setSelectedItemId(R.id.nav_status);
