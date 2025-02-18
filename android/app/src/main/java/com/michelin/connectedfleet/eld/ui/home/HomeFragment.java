@@ -31,7 +31,10 @@ import com.michelin.connectedfleet.eld.databinding.ItemLogsBinding;
 import com.michelin.connectedfleet.eld.ui.data.LogEntry;
 import com.michelin.connectedfleet.eld.ui.data.LogEntryService;
 import com.michelin.connectedfleet.eld.ui.data.LoggedDay;
+import com.michelin.connectedfleet.eld.ui.data.retrofitinterface.CreateLogEntryRequest;
+import com.michelin.connectedfleet.eld.ui.data.retrofitinterface.CreateLogEntryResponse;
 import com.michelin.connectedfleet.eld.ui.data.retrofitinterface.GetLogEntryResponseItem;
+import com.michelin.connectedfleet.eld.ui.data.util.TimerManager;
 import com.michelin.connectedfleet.eld.ui.status.StatusViewModel;
 
 import java.text.DateFormat;
@@ -80,7 +83,15 @@ public class HomeFragment extends Fragment {
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        TimerManager timer = TimerManager.getInstance();
+        timer.startTimer("break", 1 * 60 * 60 * 1000);
+        timer.pauseTimer("break");
+        timer.startTimer("driving", 1 * 60 * 60 * 1000);
+        timer.pauseTimer("driving");
+        timer.startTimer("dayReset", 5 * 60 * 60 * 1000);
+
         HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        homeViewModel.timer = timer;
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -136,15 +147,44 @@ public class HomeFragment extends Fragment {
         TextView currentStatus = binding.textviewHomeCurrentStatus;
         StatusViewModel.getStatus().observe(getViewLifecycleOwner(), driverStatus -> {
             currentStatus.setText(getResources().getTextArray(R.array.statuses)[driverStatus.ordinal()]);
+            if (currentStatus.getText().equals(getResources().getTextArray(R.array.statuses)[0])) {
+                timer.resumeTimer("driving");
+                timer.pauseTimer("break");
+            } else if (currentStatus.getText().equals(getResources().getTextArray(R.array.statuses)[1])) {
+                timer.resumeTimer("break");
+                timer.pauseTimer("driving");
+            } else {
+                timer.pauseTimer("break");
+                timer.pauseTimer("driving");
+            };
         });
 
         Button changeStatusButton = binding.homeButtonChangeStatus;
         changeStatusButton.setOnClickListener(v -> {
+            MainActivity.bottomNavigationView.setSelectedItemId(R.id.nav_status);
+
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Change Status");
             builder.setItems(R.array.statuses, (dialog, which) -> {
                 dialog.dismiss();
-                StatusViewModel.setStatus(DriverStatus.values()[which]);
+                DriverStatus status = DriverStatus.values()[which];
+                StatusViewModel.setStatus(status);
+
+                SharedPreferences prefs2 = getContext().getSharedPreferences("tokens", Context.MODE_PRIVATE);
+                String token2 = prefs.getString("token", null);
+                String cookieHeader2 = String.format("JSESSIONID=%s", token);
+
+                logsService.insert(new CreateLogEntryRequest(status.toString(), cookieHeader2)).enqueue(new Callback<CreateLogEntryResponse>() {
+                    @Override
+                    public void onResponse(Call<CreateLogEntryResponse> call, Response<CreateLogEntryResponse> response) {
+                        return;
+                    }
+
+                    @Override
+                    public void onFailure(Call<CreateLogEntryResponse> call, Throwable throwable) {
+                        return;
+                    }
+                });
             });
             builder.show();
             // MainActivity.bottomNavigationView.setSelectedItemId(R.id.nav_status);
