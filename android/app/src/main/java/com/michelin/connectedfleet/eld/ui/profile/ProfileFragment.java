@@ -72,6 +72,16 @@ public class ProfileFragment extends Fragment {
             binding.timeZone.setText("Current Timezone: " + sdf.format(new Date()));
         }
 
+        // Set units and distance driven
+        binding.distanceDriven.setText("Miles Driven: 37587.68");
+        binding.switchMetricUnits.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                binding.distanceDriven.setText("Kilometers Driven: 60491.5");
+            } else {
+                binding.distanceDriven.setText("Miles Driven: 37587.68");
+            }
+        });
+
         // Set up Retrofit and Gson for API call
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, typeOfT, context) -> {
