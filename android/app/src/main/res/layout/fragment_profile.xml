@@ -51,7 +51,7 @@
             android:id="@+id/time_zone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Current Timezone: Unkown"
+            android:text="Current Timezone: Unknown"
             android:textSize="16sp"
             android:textColor="@android:color/black"/>
 
