@@ -64,6 +64,16 @@ public class ProfileFragment extends Fragment {
             intent.launchUrl(requireContext(), Uri.parse(url));  // Use requireContext() for non-null context
         });
 
+        // Set units and distance driven
+        binding.distanceDriven.setText("Miles Driven: 60491.5");
+        binding.switchMetricUnits.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                binding.distanceDriven.setText("Kilometers Driven: 60491.5");
+            } else {
+                binding.distanceDriven.setText("Miles Driven: 37587.68");
+            }
+        });
+
         // Set up timezone localization
         TimeZone timezone = TimeZone.getDefault();
         SimpleDateFormat sdf = new SimpleDateFormat("zzz XXX"); // "zzz" for short name, "XXX" for offset
