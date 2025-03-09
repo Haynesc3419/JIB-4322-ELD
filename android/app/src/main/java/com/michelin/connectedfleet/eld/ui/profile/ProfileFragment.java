@@ -10,6 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 import androidx.annotation.NonNull;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.fragment.app.Fragment;
@@ -59,6 +63,14 @@ public class ProfileFragment extends Fragment {
                     .build();
             intent.launchUrl(requireContext(), Uri.parse(url));  // Use requireContext() for non-null context
         });
+
+        // Set up timezone localization
+        TimeZone timezone = TimeZone.getDefault();
+        SimpleDateFormat sdf = new SimpleDateFormat("zzz XXX"); // "zzz" for short name, "XXX" for offset
+        sdf.setTimeZone(TimeZone.getDefault());
+        if (binding.timeZone != null) {
+            binding.timeZone.setText("Current Timezone: " + sdf.format(new Date()));
+        }
 
         // Set up Retrofit and Gson for API call
         GsonBuilder gsonBuilder = new GsonBuilder();
