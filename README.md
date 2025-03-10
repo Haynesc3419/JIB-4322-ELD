@@ -8,6 +8,17 @@ Frontend - Android Studio/Java \
 Backend - MongoDB, Java
 
 # Release Notes
+## v0.3.0
+### Features
+* Support a horizontal view for use on tablet and phone.  
+* Change between dark and light mode so that to accommodate driving at night or during the day and reduce eye strain. 
+* Update my time zone automatically based on location so that logs are always accurate (might be out of scope or unnecessary – need to talk to client and maybe change). 
+* Switch between metric and imperial units to view distance and speed in preferred format. 
+### Bug Fixes
+* Fixed bug where app could not call backend.
+### Known Issues
+* Bug with screen rotation.
+
 
 ## v0.2.0
 ### Features
