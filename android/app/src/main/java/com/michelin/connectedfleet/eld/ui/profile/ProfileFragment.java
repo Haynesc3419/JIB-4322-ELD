@@ -65,7 +65,7 @@ public class ProfileFragment extends Fragment {
         });
 
         // Set units and distance driven
-        binding.distanceDriven.setText("Miles Driven: 60491.5");
+        binding.distanceDriven.setText("Miles Driven: 37587.68"); // TODO: Link to driver information
         binding.switchMetricUnits.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 binding.distanceDriven.setText("Kilometers Driven: 60491.5");
