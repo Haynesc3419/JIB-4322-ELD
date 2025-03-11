@@ -16,4 +16,6 @@
     <color name="status_danger">#DC3220</color>
 
     <color name="gray_light_20">#cccccc</color>
+
+    <color name="black_text">#000</color>
 </resources>

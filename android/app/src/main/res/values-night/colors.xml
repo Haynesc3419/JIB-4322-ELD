@@ -8,12 +8,14 @@
     <color name="black">#0A0A0A</color>
     <color name="white">#BDBDBD</color>
 
-    <color name="primary_blue">#162D52</color>
-    <color name="light_blue_1">#2A3E5A</color>
+    <color name="primary_blue">#5085E6</color>
+    <color name="light_blue_1">#3A506B</color>
 
     <color name="status_valid">#287ACC</color>
     <color name="status_warning">#E69A00</color>
     <color name="status_danger">#D94E3D</color>
 
     <color name="gray_light_20">#555555</color>
+
+    <color name="black_text">#fff</color>
 </resources>

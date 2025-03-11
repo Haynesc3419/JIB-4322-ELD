@@ -25,7 +25,7 @@ public record LoggedDay (
         // drivingStarted will be null if the user has not started driving
         LocalDateTime drivingStarted = null;
         for (GetLogEntryResponseItem logEntry : logEntries) {
-            if (logEntry.status().equals("Driving")) {
+            if (logEntry.status().equalsIgnoreCase("Driving")) {
                 drivingStarted = logEntry.dateTime();
             } else {
                 if (drivingStarted != null) {
