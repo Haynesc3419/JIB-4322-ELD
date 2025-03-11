@@ -60,4 +60,7 @@
     <string name="login_failed">"Login failed"</string>
     <string name="_29">29</string>
     <string name="jan">JAN</string>
+
+    <string name="example">Example</string>
+    <string name="example_text">Example Text</string>
 </resources>
