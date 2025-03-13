@@ -20,6 +20,7 @@
                 android:name=".ui.login.LoginActivity"
                 android:exported="true"
                 android:label="@string/title_activity_login"
+                android:configChanges="orientation|screenSize"
                 android:theme="@style/Theme.MichelinConnectedFleetELD.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

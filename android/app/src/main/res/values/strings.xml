@@ -25,6 +25,8 @@
     <string name="nav_profile">Profile</string>
     <string name="nav_home">Home</string>
     <string name="nav_status">Status</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_log_book">Log Book</string>
     <string name="michelin_connected_fleet_logo">Michelin Connected Fleet Logo</string>
     <string name="hours_remaining_today">Hours Remaining Today</string>
     <string name="time_remaining_break">Break</string>
@@ -36,7 +38,7 @@
 
     <string name="hour_minute">%1$02d:%2$02d</string>
     <string name="hour_minute_filler">10:21</string>
-    <string name="change_status">Change Status</string>
+    <string name="change_status">Change\n Status</string>
     <string name="current_status_colon">Current status:</string>
 
     <array name="statuses">
