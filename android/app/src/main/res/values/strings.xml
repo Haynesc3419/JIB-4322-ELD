@@ -36,8 +36,8 @@
     <string name="calendar_icon">Calendar icon</string>
     <string name="chevron_right">Chevron right</string>
 
-    <string name="hour_minute">%1$02d:%2$02d</string>
-    <string name="hour_minute_filler">10:21</string>
+    <string name="hour_minute_second">%1$02d:%2$02d:%3$02d</string>
+    <string name="hour_minute_filler">10:21:19</string>
     <string name="change_status">Change\n Status</string>
     <string name="current_status_colon">Current status:</string>
 

@@ -80,13 +80,16 @@ public class TimerManager {
             public void onTick(long millisUntilFinished) {
                 int breakHours = (int) (instance.getTimeLeft("break") / (1000 * 60 * 60));
                 int breakMinutes = (int) ((instance.getTimeLeft("break") % (1000 * 60 * 60)) / (1000 * 60));
+                int breakSeconds = (int) ((instance.getTimeLeft("break") % (1000 * 60)) / (1000));
                 int drivingHours = (int) (instance.getTimeLeft("driving") / (1000 * 60 * 60));
                 int drivingMinutes = (int) ((instance.getTimeLeft("driving") % (1000 * 60 * 60)) / (1000 * 60));
+                int drivingSeconds = (int) ((instance.getTimeLeft("driving") % (1000 * 60)) / (1000));
                 int dayResetHours = (int) (instance.getTimeLeft("dayReset") / (1000 * 60 * 60));
                 int dayResetMinutes = (int) ((instance.getTimeLeft("dayReset") % (1000 * 60 * 60)) / (1000 * 60));
-                breakHoursRemaining.setValue(new HomeViewModel.HoursRemainingViewModel.HoursRemainingContainer(LocalTime.of(2, 0), LocalTime.of(breakHours, breakMinutes)));
-                drivingHoursRemaining.setValue(new HomeViewModel.HoursRemainingViewModel.HoursRemainingContainer(LocalTime.of(8, 0), LocalTime.of(drivingHours, drivingMinutes)));
-                dayResetHoursRemaining.setValue(new HomeViewModel.HoursRemainingViewModel.HoursRemainingContainer(LocalTime.of(23, 0), LocalTime.of(dayResetHours, dayResetMinutes)));
+                int dayResetSeconds = (int) ((instance.getTimeLeft("dayReset") % (1000 * 60)) / (1000));
+                breakHoursRemaining.setValue(new HomeViewModel.HoursRemainingViewModel.HoursRemainingContainer(LocalTime.of(2, 0, 0), LocalTime.of(breakHours, breakMinutes, breakSeconds)));
+                drivingHoursRemaining.setValue(new HomeViewModel.HoursRemainingViewModel.HoursRemainingContainer(LocalTime.of(8, 0, 0), LocalTime.of(drivingHours, drivingMinutes, drivingSeconds)));
+                dayResetHoursRemaining.setValue(new HomeViewModel.HoursRemainingViewModel.HoursRemainingContainer(LocalTime.of(23, 0, 0), LocalTime.of(dayResetHours, dayResetMinutes, dayResetSeconds)));
                 if (timers.containsKey(timerId)) {
                     timers.get(timerId).timeLeft = millisUntilFinished;
                 }
