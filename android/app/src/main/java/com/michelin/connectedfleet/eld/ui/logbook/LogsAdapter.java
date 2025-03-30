@@ -18,7 +18,6 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class LogsAdapter extends ListAdapter<LoggedDay, LogsAdapter.LogsViewHolder> {
-    private List<LoggedDay> days;
     private static Locale locale;
     private final OnLogClickListener onLogClickListener;
 
@@ -26,12 +25,12 @@ public class LogsAdapter extends ListAdapter<LoggedDay, LogsAdapter.LogsViewHold
         super(new DiffUtil.ItemCallback<>() {
             @Override
             public boolean areItemsTheSame(@NonNull LoggedDay oldItem, @NonNull LoggedDay newItem) {
-                return oldItem.equals(newItem);
+                return oldItem.date().equals(newItem.date()); // Compare based on unique identifier (e.g., date)
             }
 
             @Override
             public boolean areContentsTheSame(@NonNull LoggedDay oldItem, @NonNull LoggedDay newItem) {
-                return oldItem.equals(newItem);
+                return oldItem.equals(newItem); // Ensure LoggedDay has a proper equals() method
             }
         });
 
@@ -40,14 +39,8 @@ public class LogsAdapter extends ListAdapter<LoggedDay, LogsAdapter.LogsViewHold
     }
 
     @Override
-    public void submitList(List<LoggedDay> list) {
-        days = list;
-        super.submitList(list);
-    }
-
-    @Override
     public int getItemCount() {
-        return (days == null) ? 0 : days.size();
+        return getCurrentList().size(); // Use ListAdapter's internal list
     }
 
     @NonNull
@@ -59,7 +52,7 @@ public class LogsAdapter extends ListAdapter<LoggedDay, LogsAdapter.LogsViewHold
 
     @Override
     public void onBindViewHolder(@NonNull LogsViewHolder holder, int position) {
-        LoggedDay item = days.get(position);
+        LoggedDay item = getItem(position); // Use getItem() instead of custom list
         holder.calendarDayView.setText(String.valueOf(item.date().getDayOfMonth()));
         holder.calendarMonthView.setText(item.getMonthAbbreviation());
         holder.detailsView.setText("Drove for " + item.getTimeDriven());

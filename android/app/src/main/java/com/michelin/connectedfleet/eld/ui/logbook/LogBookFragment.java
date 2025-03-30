@@ -65,7 +65,9 @@ public class LogBookFragment extends Fragment {
     private final OnLogClickListener logClickListener = loggedDay -> {
         LogEntryFragment logEntryFragment = new LogEntryFragment();
         Bundle args = new Bundle();
-        args.putString("log_entry", loggedDay.toString()); // Adjust as needed
+
+        args.putString("date", loggedDay.date().toString());
+        args.putString("log_entries", loggedDay.logEntries().toString()); // Adjust as needed
         logEntryFragment.setArguments(args);
         logEntryFragment.show(getParentFragmentManager(), "LogEntryFragment");
     };
