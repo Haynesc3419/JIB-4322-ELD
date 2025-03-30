@@ -46,24 +46,24 @@ public class MyApplication extends Application {
     }
 
     private void scheduleDrivingLimitWorker() {
-        PeriodicWorkRequest drivingLimitWorkRequest =
-                new PeriodicWorkRequest.Builder(DrivingLimitWorker.class, 15, TimeUnit.MINUTES)
-                        .build();
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-                "DrivingLimitWorker",
-                ExistingPeriodicWorkPolicy.KEEP,
-                drivingLimitWorkRequest
-        );
-
 //        PeriodicWorkRequest drivingLimitWorkRequest =
 //                new PeriodicWorkRequest.Builder(DrivingLimitWorker.class, 15, TimeUnit.MINUTES)
-//                        .setInitialDelay(10, TimeUnit.SECONDS)
 //                        .build();
-//
 //        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
 //                "DrivingLimitWorker",
 //                ExistingPeriodicWorkPolicy.KEEP,
 //                drivingLimitWorkRequest
 //        );
+
+        PeriodicWorkRequest drivingLimitWorkRequest =
+                new PeriodicWorkRequest.Builder(DrivingLimitWorker.class, 15, TimeUnit.MINUTES)
+                        .setInitialDelay(10, TimeUnit.SECONDS)
+                        .build();
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "DrivingLimitWorker",
+                ExistingPeriodicWorkPolicy.KEEP,
+                drivingLimitWorkRequest
+        );
     }
 }
