@@ -80,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.nav_settings) {
             NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
             navController.navigate(R.id.nav_settings);
+        } else if (item.getItemId() == R.id.nav_log_book) {
+            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+            navController.navigate(R.id.nav_log_book);
         }
         return super.onOptionsItemSelected(item);
     }

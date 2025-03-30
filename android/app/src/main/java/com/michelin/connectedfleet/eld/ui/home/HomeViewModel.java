@@ -64,21 +64,24 @@ public class HomeViewModel extends AndroidViewModel {
             this.validColor = application.getResources().getColor(R.color.status_valid, application.getTheme());
             this.warningColor = application.getResources().getColor(R.color.status_warning, getApplication().getTheme());
             this.dangerColor = application.getResources().getColor(R.color.status_danger, getApplication().getTheme());
-            this.hourMinuteFormatString = application.getString(R.string.hour_minute);
+            this.hourMinuteFormatString = application.getString(R.string.hour_minute_second);
 
             timer.breakHoursRemaining = breakHoursRemaining;
             timer.drivingHoursRemaining = drivingHoursRemaining;
             timer.dayResetHoursRemaining = dayResetHoursRemaining;
 
             // Again - bad but fine for the demo
+            // 3/13/2025 - this may do absolutely nothing, delete?
             int breakHours = (int) (timer.getTimeLeft("break") / (1000 * 60 * 60));
             int breakMinutes = (int) ((timer.getTimeLeft("break") % (1000 * 60 * 60)) / (1000 * 60));
+            int breakSeconds = (int) ((timer.getTimeLeft("break") % (1000 * 60)) / (1000));
             int drivingHours = (int) (timer.getTimeLeft("driving") / (1000 * 60 * 60));
             int drivingMinutes = (int) ((timer.getTimeLeft("driving") % (1000 * 60 * 60)) / (1000 * 60));
+            int drivingSeconds = (int) ((timer.getTimeLeft("driving") % (1000 * 60)) / (1000));
 
-            breakHoursRemaining.setValue(new HoursRemainingContainer(LocalTime.of(2, 0), LocalTime.of(breakHours, breakMinutes)));
-            drivingHoursRemaining.setValue(new HoursRemainingContainer(LocalTime.of(8, 0), LocalTime.of(drivingHours, drivingMinutes)));
-            dayResetHoursRemaining.setValue(new HoursRemainingContainer(LocalTime.of(23, 0), LocalTime.of(9, 22)));
+            breakHoursRemaining.setValue(new HoursRemainingContainer(LocalTime.of(2, 0, 0), LocalTime.of(breakHours, breakMinutes, breakSeconds)));
+            drivingHoursRemaining.setValue(new HoursRemainingContainer(LocalTime.of(8, 0, 0), LocalTime.of(drivingHours, drivingMinutes, drivingSeconds)));
+            dayResetHoursRemaining.setValue(new HoursRemainingContainer(LocalTime.of(23, 0, 0), LocalTime.of(9, 22, 1)));
         }
 
         public MutableLiveData<HoursRemainingContainer> getBreakHoursRemaining() {
@@ -104,7 +107,8 @@ public class HomeViewModel extends AndroidViewModel {
                         String.format(
                                 hourMinuteFormatString,
                                 hoursRemainingContainer.remaining.getHour(),
-                                hoursRemainingContainer.remaining.getMinute())
+                                hoursRemainingContainer.remaining.getMinute(),
+                                hoursRemainingContainer.remaining.getSecond())
                 );
                 indicator.setMax(limitMinutes);
                 indicator.setProgress(remainingMinutes);

@@ -44,7 +44,7 @@
             android:text="johndoe@example.com"
             android:textSize="16sp"
             android:layout_marginBottom="8sp"
-            android:textColor="@android:color/darker_gray"/>
+            android:textColor="@android:color/black"/>
 
         <TextView
             android:id="@+id/distance_driven"
@@ -53,7 +53,7 @@
             android:text="Distance Driven: Unknown"
             android:textSize="16sp"
             android:layout_marginBottom="8sp"
-            android:textColor="@android:color/darker_gray"/>
+            android:textColor="@android:color/black"/>
 
         <TextView
             android:id="@+id/time_zone"
@@ -72,8 +72,7 @@
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:gravity="center"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_margin="8dp"
             android:backgroundTint="@android:color/holo_blue_dark">
 
         </Button>  <!-- Blue background --><!-- Shadow effect for elevation -->
@@ -83,7 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="16dp">
+            android:layout_gravity="center">
 
             <TextView
                 android:layout_width="wrap_content"
