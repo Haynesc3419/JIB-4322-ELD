@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <!-- Set the width to 80% of the screen -->
+        <item name="android:windowMinWidthMajor">85%</item>
+        <item name="android:windowMinWidthMinor">85%</item>
+        <item name="android:minHeight">350dp</item>
+
+        <!-- Set the height to 80% of the screen -->
+
+    </style>
+
+</resources>

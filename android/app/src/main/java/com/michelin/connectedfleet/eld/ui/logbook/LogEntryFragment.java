@@ -3,10 +3,13 @@ package com.michelin.connectedfleet.eld.ui.logbook;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
@@ -19,8 +22,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
 import com.michelin.connectedfleet.eld.R;
 import com.michelin.connectedfleet.eld.ui.data.LogEntry;
+import com.michelin.connectedfleet.eld.ui.data.LogEntryService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,7 +35,16 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class LogEntryFragment extends DialogFragment {
+    LogEntryService logsService;
+
+    LogEntry logEntry;
 
 
     @Nullable
@@ -40,6 +55,9 @@ public class LogEntryFragment extends DialogFragment {
         Button closeButton = view.findViewById(R.id.button_close);
         closeButton.setOnClickListener(v -> dismiss());
 
+        Button submitButton = view.findViewById(R.id.button_submit);
+        submitButton.setOnClickListener(v -> dismiss());
+
         TextView logEntryTextView = view.findViewById(R.id.entry_text);
 
         Bundle args = getArguments();
@@ -48,6 +66,7 @@ public class LogEntryFragment extends DialogFragment {
         if (args != null) {
             String logEntries = args.getString("log_entries");
             StringBuilder logEntryText = new StringBuilder();
+            Log.d("logEntries", logEntries.toString());
 
             // Regex to extract status and dateTime
             String regex = "GetLogEntryResponseItem\\[status=(.*?), dateTime=(.*?)\\]";
@@ -63,13 +82,17 @@ public class LogEntryFragment extends DialogFragment {
                 String status = matcher.group(1);
                 String dateTimeString = matcher.group(2);
 
-                // Convert full timestamp to just HH:mm
                 LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, inputFormatter);
                 String formattedTime = dateTime.format(outputFormatter);
 
-                logEntryText.append(counter).append(". ")
+
+
+                logEntryText
+                        .append(counter).append(". ")
                         .append("Status: ").append(status).append("\n")
-                        .append("Time: ").append(formattedTime).append("\n\n");
+                        .append("Time: ").append(formattedTime).append("\n");
+
+                logEntryText.append("\n\n");
             }
 
             logEntryTextView.setText(logEntryText.toString().trim());

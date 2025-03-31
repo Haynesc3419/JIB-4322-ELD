@@ -11,7 +11,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.ListAdapter;
@@ -19,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
+import com.michelin.connectedfleet.eld.R;
 import com.michelin.connectedfleet.eld.databinding.FragmentLogBookBinding;
 import com.michelin.connectedfleet.eld.databinding.ItemLogsBinding;
 import com.michelin.connectedfleet.eld.ui.data.LogEntryService;
@@ -67,7 +71,7 @@ public class LogBookFragment extends Fragment {
         Bundle args = new Bundle();
 
         args.putString("date", loggedDay.date().toString());
-        args.putString("log_entries", loggedDay.logEntries().toString()); // Adjust as needed
+        args.putString("log_entries", loggedDay.logEntries().toString()); // A// djust as needed
         logEntryFragment.setArguments(args);
         logEntryFragment.show(getParentFragmentManager(), "LogEntryFragment");
     };
