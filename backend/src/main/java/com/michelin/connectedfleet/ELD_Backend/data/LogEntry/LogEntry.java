@@ -26,4 +26,9 @@ public class LogEntry {
     public String getStatus() {
         return status;
     }
+
+    public String getId() {
+        return id;
+    }
+
 }

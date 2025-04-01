@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -51,5 +52,21 @@ public class LogEntryController {
                 .toList();
 
         return new ResponseEntity<>(entries, HttpStatus.OK);
+    }
+
+    @PutMapping("/updateEntry")
+    public ResponseEntity<?> updateEntry(@RequestBody LogEntry logEntry, HttpSession session) {
+        System.out.println("Updating entry: " + logEntry.toString());
+
+
+        String id = logEntry.getId();
+        Optional<LogEntry> existingEntry = logEntryRepository.findById(id);
+        if (existingEntry.isEmpty()) {
+            return new ResponseEntity<>("Log entry not found", HttpStatus.NOT_FOUND);
+        }
+
+        logEntryRepository.save(logEntry); // Save updates
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
