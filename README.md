@@ -8,6 +8,17 @@ Frontend - Android Studio/Java \
 Backend - MongoDB, Java
 
 # Release Notes
+## v0.4.0
+### Features
+* Submit a change request if a log is incorrect 
+* Access driving logs in the ELD to I can verify them before submitting them. 
+* Receive notifications whenapproaching my daily driving limit to safely plan rest stops.
+### Bug Fixes
+* Fixed bug with screen rotation
+* Fixed bug with hard coded metric to imperial unit conversions
+### Known Issues
+* Bug with horizontal display in tablet view. Only works on certian resource files in Android Studio currently.
+  
 ## v0.3.0
 ### Features
 * Support a horizontal view for use on tablet and phone.  
