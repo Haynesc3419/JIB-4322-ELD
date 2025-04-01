@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace 'com.michelin.connectedfleet.eld'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.michelin.connectedfleet.eld"
@@ -52,6 +52,7 @@ dependencies {
     implementation libs.volley
     implementation libs.retrofit
     implementation libs.converter.gson
+    implementation libs.work.runtime
     // implementation libs.mongodb.driver.sync
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
