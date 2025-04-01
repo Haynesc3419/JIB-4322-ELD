@@ -11,6 +11,9 @@ import com.michelin.connectedfleet.eld.ui.data.NotificationHelper;
 import com.michelin.connectedfleet.eld.ui.data.util.TimerManager;
 
 public class DrivingLimitWorker extends Worker {
+    private static final int CRITICAL_THRESHOLD_MINUTES = 15;
+    private static final int WARNING_THRESHOLD_MINUTES = 30;
+    private static final int NOTICE_THRESHOLD_MINUTES = 60;
 
     public DrivingLimitWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -25,13 +28,17 @@ public class DrivingLimitWorker extends Worker {
 
         // Convert time left from milliseconds to minutes
         long minutesLeft = timeLeftMs / (1000 * 60);
-//        int hours = (int) (minutesLeft / 60);
-//        int minutes = (int) (minutesLeft % 60);
 
-        // If remaining time is less than 60 minutes post a notification
-        if (minutesLeft < 60) {
+        // Show notifications based on different thresholds
+        if (minutesLeft <= CRITICAL_THRESHOLD_MINUTES) {
             String remainingTimeStr = String.format("%d minutes", minutesLeft);
-            NotificationHelper.showDrivingLimitNotification(getApplicationContext(), remainingTimeStr);
+            NotificationHelper.showDrivingLimitNotification(getApplicationContext(), remainingTimeStr, true);
+        } else if (minutesLeft <= WARNING_THRESHOLD_MINUTES) {
+            String remainingTimeStr = String.format("%d minutes", minutesLeft);
+            NotificationHelper.showDrivingLimitNotification(getApplicationContext(), remainingTimeStr, false);
+        } else if (minutesLeft <= NOTICE_THRESHOLD_MINUTES) {
+            String remainingTimeStr = String.format("%d minutes", minutesLeft);
+            NotificationHelper.showDrivingLimitNotification(getApplicationContext(), remainingTimeStr, false);
         }
 
         return Result.success();

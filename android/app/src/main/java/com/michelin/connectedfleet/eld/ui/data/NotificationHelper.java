@@ -13,24 +13,35 @@ public class NotificationHelper {
     private static final int NOTIFICATION_ID = 1001;
     private static final String TAG = "NotificationHelper";
 
-    public static void showDrivingLimitNotification(Context context, String remainingTime) {
+    public static void showDrivingLimitNotification(Context context, String remainingTime, boolean isCritical) {
         String contentText = "You are approaching your daily driving limit. " +
                 "You have " + remainingTime + " left today. Please plan your rest stop accordingly.";
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, MyApplication.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle("Driving Limit Alert")
+                .setContentTitle(isCritical ? "Critical: Driving Limit Alert" : "Driving Limit Alert")
                 .setContentText(contentText)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setPriority(isCritical ? NotificationCompat.PRIORITY_HIGH : NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true);
 
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (notificationManager != null) {
             notificationManager.notify(NOTIFICATION_ID, builder.build());
-            Log.d(TAG, "Driving limit notification posted");
+            Log.d(TAG, "Driving limit notification posted with " + (isCritical ? "critical" : "normal") + " priority");
         } else {
             Log.e(TAG, "Notification Manager is null, cannot show notification");
+        }
+    }
+
+    public static void cancelDrivingLimitNotification(Context context) {
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager != null) {
+            notificationManager.cancel(NOTIFICATION_ID);
+            Log.d(TAG, "Driving limit notification cancelled");
+        } else {
+            Log.e(TAG, "Notification Manager is null, cannot cancel notification");
         }
     }
 }
