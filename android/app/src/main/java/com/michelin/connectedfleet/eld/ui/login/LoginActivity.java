@@ -136,9 +136,16 @@ public class LoginActivity extends AppCompatActivity {
         toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 0);
         toast.show();
     }
+    private void showLoginSuccess(@StringRes Integer successString) {
+        Toast toast = Toast.makeText(getApplicationContext(), successString, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 0);
+        toast.show();
+    }
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast toast = Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 0);
         toast.show();
     }
 }
+
+
