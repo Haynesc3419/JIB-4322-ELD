@@ -23,7 +23,7 @@ public class TimerManager {
     // private static final long NOTICE_THRESHOLD = 120 * 60 * 1000;   // 2 hours
     
     // Demo thresholds
-    private static final long CRITICAL_THRESHOLD = 57 * 60 * 1000;  // 57 minutes
+    private static final long CRITICAL_THRESHOLD = 53 * 60 * 1000;  // 57 minutes
     private static final long WARNING_THRESHOLD = 58 * 60 * 1000;   // 58 minutes
     private static final long NOTICE_THRESHOLD = 59 * 60 * 1000;    // 59 minutes
     private static final String TAG = "TimerManager";
@@ -64,8 +64,7 @@ public class TimerManager {
         }
 
         String remainingTimeStr = String.format("%d minutes", millisUntilFinished / (60 * 1000));
-        Log.d(TAG, "Current time remaining: " + millisUntilFinished + "ms (" + remainingTimeStr + ")");
-        Log.d(TAG, "Thresholds - NOTICE: " + NOTICE_THRESHOLD + "ms, WARNING: " + WARNING_THRESHOLD + "ms, CRITICAL: " + CRITICAL_THRESHOLD + "ms");
+        Log.d(TAG, "Checking notification thresholds for " + remainingTimeStr + " remaining");
 
         if (millisUntilFinished <= CRITICAL_THRESHOLD && !notificationSent.get("critical")) {
             Log.w(TAG, "Sending CRITICAL notification: " + remainingTimeStr + " remaining");
