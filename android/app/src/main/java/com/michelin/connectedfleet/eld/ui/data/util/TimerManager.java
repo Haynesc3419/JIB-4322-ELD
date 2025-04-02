@@ -17,9 +17,15 @@ public class TimerManager {
     private static TimerManager instance;
     private final Map<String, TimerData> timers = new HashMap<>();
     private Context applicationContext;
-    private static final long CRITICAL_THRESHOLD = 30 * 60 * 1000;  // 30 minutes
-    private static final long WARNING_THRESHOLD = 60 * 60 * 1000;   // 1 hour
-    private static final long NOTICE_THRESHOLD = 120 * 60 * 1000;   // 2 hours
+    // Production thresholds
+    // private static final long CRITICAL_THRESHOLD = 30 * 60 * 1000;  // 30 minutes
+    // private static final long WARNING_THRESHOLD = 60 * 60 * 1000;   // 1 hour
+    // private static final long NOTICE_THRESHOLD = 120 * 60 * 1000;   // 2 hours
+    
+    // Demo thresholds
+    private static final long CRITICAL_THRESHOLD = 57 * 60 * 1000;  // 57 minutes
+    private static final long WARNING_THRESHOLD = 58 * 60 * 1000;   // 58 minutes
+    private static final long NOTICE_THRESHOLD = 59 * 60 * 1000;    // 59 minutes
     private static final String TAG = "TimerManager";
     private Map<String, Boolean> notificationSent = new HashMap<>();
 
@@ -58,7 +64,8 @@ public class TimerManager {
         }
 
         String remainingTimeStr = String.format("%d minutes", millisUntilFinished / (60 * 1000));
-        Log.d(TAG, "Checking notification thresholds for " + remainingTimeStr + " remaining");
+        Log.d(TAG, "Current time remaining: " + millisUntilFinished + "ms (" + remainingTimeStr + ")");
+        Log.d(TAG, "Thresholds - NOTICE: " + NOTICE_THRESHOLD + "ms, WARNING: " + WARNING_THRESHOLD + "ms, CRITICAL: " + CRITICAL_THRESHOLD + "ms");
 
         if (millisUntilFinished <= CRITICAL_THRESHOLD && !notificationSent.get("critical")) {
             Log.w(TAG, "Sending CRITICAL notification: " + remainingTimeStr + " remaining");
