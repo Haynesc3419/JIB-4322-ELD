@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.GsonBuilder;
@@ -46,6 +47,12 @@ public class LogEntryFragment extends DialogFragment {
 
     LogEntry logEntry;
 
+    private LogEntryService logEntryService;
+
+    private List<String> ids = new ArrayList<>();
+
+    private EditText changeRequestEditText;
+
 
     @Nullable
     @Override
@@ -56,7 +63,12 @@ public class LogEntryFragment extends DialogFragment {
         closeButton.setOnClickListener(v -> dismiss());
 
         Button submitButton = view.findViewById(R.id.button_submit);
-        submitButton.setOnClickListener(v -> dismiss());
+        submitButton.setOnClickListener(v -> onSignClick());
+
+        Button changeRequestButton = view.findViewById(R.id.button_change_request);
+        changeRequestButton.setOnClickListener(v -> onChangeRequestClick());
+
+        this.changeRequestEditText = view.findViewById(R.id.change_request_text);
 
         TextView logEntryTextView = view.findViewById(R.id.entry_text);
 
@@ -69,7 +81,7 @@ public class LogEntryFragment extends DialogFragment {
             Log.d("logEntries", logEntries.toString());
 
             // Regex to extract status and dateTime
-            String regex = "GetLogEntryResponseItem\\[status=(.*?), dateTime=(.*?)\\]";
+            String regex = "GetLogEntryResponseItem\\[id=(.*?), status=(.*?), dateTime=(.*?), verifiedByDriver=(.*?)\\]";
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(logEntries);
 
@@ -79,18 +91,25 @@ public class LogEntryFragment extends DialogFragment {
             int counter = 0;
             while (matcher.find()) {
                 counter++;
-                String status = matcher.group(1);
-                String dateTimeString = matcher.group(2);
+                String id = matcher.group(1);
+                String status = matcher.group(2);
+                String dateTimeString = matcher.group(3);
+                String verifiedByDriver = matcher.group(4);
 
                 LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, inputFormatter);
                 String formattedTime = dateTime.format(outputFormatter);
 
+                this.ids.add(id);
+                String verifiedText = verifiedByDriver.equals("1")  ? "Signed" : "Needs to be signed";
 
 
                 logEntryText
                         .append(counter).append(". ")
+                        .append("ID: ").append(id).append("\n")
                         .append("Status: ").append(status).append("\n")
-                        .append("Time: ").append(formattedTime).append("\n");
+                        .append("Time: ").append(formattedTime).append("\n")
+                        .append(verifiedText);
+
 
                 logEntryText.append("\n\n");
             }
@@ -101,5 +120,71 @@ public class LogEntryFragment extends DialogFragment {
 
 
         return view;
+    }
+
+    public void onChangeRequestClick() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, typeOfT, context) ->
+                LocalDateTime.parse(json.getAsString()));
+
+        GsonConverterFactory gsonConverterFactory = GsonConverterFactory.create(gsonBuilder.create());
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://10.0.2.2:8080/logs/")
+                .addConverterFactory(gsonConverterFactory)
+                .build();
+
+        logsService = retrofit.create(LogEntryService.class);
+
+        StringBuilder requestBody = new StringBuilder();
+        requestBody.append("For entry ids: ").append(ids.toString()).append(", ").append(changeRequestEditText.getText().toString());
+        Call<Void> changeRequest = logsService.changeRequest(requestBody.toString());
+
+        changeRequest.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.d("changeRequest", "success");
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable throwable) {
+                Log.d("changeRequest", "failure");
+            }
+        });
+
+        dismiss();
+        }
+
+    public void onSignClick() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, typeOfT, context) ->
+                LocalDateTime.parse(json.getAsString()));
+
+        GsonConverterFactory gsonConverterFactory = GsonConverterFactory.create(gsonBuilder.create());
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://10.0.2.2:8080/logs/")
+                .addConverterFactory(gsonConverterFactory)
+                .build();
+
+        logsService = retrofit.create(LogEntryService.class);
+
+        for (String id : ids) {
+            Call<Void> verifyRequest = logsService.verify(id);
+
+            verifyRequest.enqueue(new Callback<>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    Log.d("verify", "success");
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable throwable) {
+                    Log.d("verify", "failure");
+                }
+            });
+        }
+
+        dismiss();
     }
 }
