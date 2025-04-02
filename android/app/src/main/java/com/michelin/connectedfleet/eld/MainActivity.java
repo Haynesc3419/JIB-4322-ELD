@@ -22,6 +22,7 @@ import com.michelin.connectedfleet.eld.ui.data.util.TimeZoneManager;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
     private TimeZoneManager timeZoneManager;
@@ -63,8 +64,7 @@ public class MainActivity extends AppCompatActivity {
             bottomNavigationView.setSelectedItemId(R.id.nav_home);
         }
 
-        timeZoneManager = ((MyApplication) getApplication()).getTimeZoneManager();
-        updateTimeZone();
+        timeZoneManager = new TimeZoneManager(this);
     }
 
     @Override
@@ -96,14 +96,12 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    private void updateTimeZone() {
-        timeZoneManager.updateTimeZone();
-    }
-
     @Override
-    protected void onResume() {
-        super.onResume();
-        updateTimeZone();
+    protected void onDestroy() {
+        super.onDestroy();
+        if (timeZoneManager != null) {
+            timeZoneManager.unregisterTimeZoneReceiver();
+        }
     }
 
     public TimeZoneManager getTimeZoneManager() {
