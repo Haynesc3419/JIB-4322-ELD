@@ -64,4 +64,8 @@
     <string name="login_failed">"Login failed"</string>
     <string name="_29">29</string>
     <string name="jan">JAN</string>
+    <string name="default_profile_name">Guest User</string>
+    <string name="default_profile_email">Please log in</string>
+    <string name="current_timezone_format">Current Timezone: %s</string>
+    <string name="distance_driven_format">Distance Driven: %.1f km</string>
 </resources>

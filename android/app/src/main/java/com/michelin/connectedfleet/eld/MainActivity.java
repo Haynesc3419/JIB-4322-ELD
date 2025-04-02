@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.michelin.connectedfleet.eld.databinding.ActivityMainBinding;
 import com.michelin.connectedfleet.eld.ui.data.util.TimeZoneManager;
+import com.michelin.connectedfleet.eld.ui.data.util.UnitSettings;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
     private TimeZoneManager timeZoneManager;
+    private UnitSettings unitSettings;
 
     public static BottomNavigationView bottomNavigationView;
 
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         timeZoneManager = new TimeZoneManager(this);
+        unitSettings = new UnitSettings(this);
     }
 
     @Override
@@ -106,5 +109,9 @@ public class MainActivity extends AppCompatActivity {
 
     public TimeZoneManager getTimeZoneManager() {
         return timeZoneManager;
+    }
+
+    public UnitSettings getUnitSettings() {
+        return unitSettings;
     }
 }
