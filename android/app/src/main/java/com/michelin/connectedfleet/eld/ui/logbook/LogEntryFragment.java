@@ -24,11 +24,9 @@ import android.widget.TextView;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
-import com.michelin.connectedfleet.eld.MainActivity;
 import com.michelin.connectedfleet.eld.R;
 import com.michelin.connectedfleet.eld.ui.data.LogEntry;
 import com.michelin.connectedfleet.eld.ui.data.LogEntryService;
-import com.michelin.connectedfleet.eld.ui.data.util.UnitSettings;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -45,16 +43,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LogEntryFragment extends DialogFragment {
     LogEntryService logsService;
+
     LogEntry logEntry;
-    private UnitSettings unitSettings;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_log_entry, container, false);
-
-        // Get UnitSettings from MainActivity
-        unitSettings = ((MainActivity) requireActivity()).getUnitSettings();
 
         Button closeButton = view.findViewById(R.id.button_close);
         closeButton.setOnClickListener(v -> dismiss());
@@ -66,13 +62,14 @@ public class LogEntryFragment extends DialogFragment {
 
         Bundle args = getArguments();
 
+
         if (args != null) {
             String logEntries = args.getString("log_entries");
             StringBuilder logEntryText = new StringBuilder();
             Log.d("logEntries", logEntries.toString());
 
-            // Regex to extract status, dateTime, distance, and speed
-            String regex = "GetLogEntryResponseItem\\[status=(.*?), dateTime=(.*?), distanceMiles=(.*?), speedMph=(.*?)\\]";
+            // Regex to extract status and dateTime
+            String regex = "GetLogEntryResponseItem\\[status=(.*?), dateTime=(.*?)\\]";
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(logEntries);
 
@@ -84,34 +81,24 @@ public class LogEntryFragment extends DialogFragment {
                 counter++;
                 String status = matcher.group(1);
                 String dateTimeString = matcher.group(2);
-                double distanceMiles = Double.parseDouble(matcher.group(3));
-                double speedMph = Double.parseDouble(matcher.group(4));
 
                 LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, inputFormatter);
                 String formattedTime = dateTime.format(outputFormatter);
 
-                // Format distance and speed according to user's unit preference
-                String distanceStr = unitSettings.formatDistance(distanceMiles);
-                String speedStr = unitSettings.formatSpeed(speedMph);
+
 
                 logEntryText
                         .append(counter).append(". ")
                         .append("Status: ").append(status).append("\n")
-                        .append("Time: ").append(formattedTime).append("\n")
-                        .append("Distance: ").append(distanceStr).append("\n")
-                        .append("Speed: ").append(speedStr).append("\n");
+                        .append("Time: ").append(formattedTime).append("\n");
 
                 logEntryText.append("\n\n");
             }
 
             logEntryTextView.setText(logEntryText.toString().trim());
-
-            // Observe unit changes and update display
-            unitSettings.getUseMetric().observe(getViewLifecycleOwner(), isMetric -> {
-                // Refresh the display when unit preference changes
-                logEntryTextView.setText(logEntryText.toString().trim());
-            });
         }
+
+
 
         return view;
     }

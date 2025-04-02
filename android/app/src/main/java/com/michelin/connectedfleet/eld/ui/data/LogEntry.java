@@ -1,10 +1,24 @@
 package com.michelin.connectedfleet.eld.ui.data;
 
-import java.time.LocalDateTime;
+import com.michelin.connectedfleet.eld.ui.data.retrofitinterface.GetLogEntryResponseItem;
 
-public record LogEntry(
-    String status,
-    LocalDateTime dateTime,
-    double distanceMiles,  // Distance in miles (stored in imperial)
-    double speedMph        // Speed in mph (stored in imperial)
-) {}
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
+public class LogEntry {
+    public LocalDateTime dateTime;
+    public String status;
+    public ZoneId timeZone;
+
+    public LogEntry(GetLogEntryResponseItem item) {
+        this.dateTime = item.dateTime();
+        this.status = item.status();
+        this.timeZone = ZoneId.systemDefault();
+    }
+
+    public LogEntry(GetLogEntryResponseItem item, ZoneId timeZone) {
+        this.dateTime = item.dateTime();
+        this.status = item.status();
+        this.timeZone = timeZone;
+    }
+}
