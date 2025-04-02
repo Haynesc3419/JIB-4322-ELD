@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.michelin.connectedfleet.eld.databinding.ActivityMainBinding;
 import com.michelin.connectedfleet.eld.ui.data.util.TimeZoneManager;
 import com.michelin.connectedfleet.eld.ui.data.util.UnitSettings;
+import com.michelin.connectedfleet.eld.ui.data.util.TimerManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -68,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
 
         timeZoneManager = new TimeZoneManager(this);
         unitSettings = new UnitSettings(this);
+
+        // Initialize TimerManager with context
+        TimerManager.getInstance().setContext(this);
     }
 
     @Override

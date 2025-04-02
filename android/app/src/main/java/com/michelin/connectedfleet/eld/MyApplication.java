@@ -26,6 +26,19 @@ public class MyApplication extends Application {
         super.onCreate();
         createNotificationChannel();
         timeZoneManager = new TimeZoneManager(this);
+        
+        // Schedule the DrivingLimitWorker to run periodically
+        PeriodicWorkRequest drivingLimitWork = new PeriodicWorkRequest.Builder(
+            DrivingLimitWorker.class,
+            15, TimeUnit.MINUTES)  // Check every 15 minutes
+            .build();
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "drivingLimitWork",
+            ExistingPeriodicWorkPolicy.REPLACE,
+            drivingLimitWork
+        );
+        Log.d(TAG, "DrivingLimitWorker scheduled successfully");
     }
 
     private void createNotificationChannel() {
