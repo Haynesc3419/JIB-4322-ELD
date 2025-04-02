@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.GsonBuilder;
@@ -50,6 +51,8 @@ public class LogEntryFragment extends DialogFragment {
 
     private List<String> ids = new ArrayList<>();
 
+    private EditText changeRequestEditText;
+
 
     @Nullable
     @Override
@@ -61,6 +64,11 @@ public class LogEntryFragment extends DialogFragment {
 
         Button submitButton = view.findViewById(R.id.button_submit);
         submitButton.setOnClickListener(v -> onSignClick());
+
+        Button changeRequestButton = view.findViewById(R.id.button_change_request);
+        changeRequestButton.setOnClickListener(v -> onChangeRequestClick());
+
+        this.changeRequestEditText = view.findViewById(R.id.change_request_text);
 
         TextView logEntryTextView = view.findViewById(R.id.entry_text);
 
@@ -113,6 +121,39 @@ public class LogEntryFragment extends DialogFragment {
 
         return view;
     }
+
+    public void onChangeRequestClick() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, typeOfT, context) ->
+                LocalDateTime.parse(json.getAsString()));
+
+        GsonConverterFactory gsonConverterFactory = GsonConverterFactory.create(gsonBuilder.create());
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://10.0.2.2:8080/logs/")
+                .addConverterFactory(gsonConverterFactory)
+                .build();
+
+        logsService = retrofit.create(LogEntryService.class);
+
+        StringBuilder requestBody = new StringBuilder();
+        requestBody.append("For entry ids: ").append(ids.toString()).append(", ").append(changeRequestEditText.getText().toString());
+        Call<Void> changeRequest = logsService.changeRequest(requestBody.toString());
+
+        changeRequest.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.d("changeRequest", "success");
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable throwable) {
+                Log.d("changeRequest", "failure");
+            }
+        });
+
+        dismiss();
+        }
 
     public void onSignClick() {
         GsonBuilder gsonBuilder = new GsonBuilder();

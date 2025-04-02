@@ -1,5 +1,7 @@
 package com.michelin.connectedfleet.ELD_Backend;
 
+import com.michelin.connectedfleet.ELD_Backend.data.LogChange.LogChange;
+import com.michelin.connectedfleet.ELD_Backend.data.LogChange.LogChangeRepository;
 import com.michelin.connectedfleet.ELD_Backend.data.LogEntry.CreateLogEntryRequest;
 import com.michelin.connectedfleet.ELD_Backend.data.LogEntry.GetLogEntryResponseItem;
 import com.michelin.connectedfleet.ELD_Backend.data.LogEntry.LogEntry;
@@ -23,8 +25,11 @@ import java.util.stream.Collectors;
 public class LogEntryController {
     private final LogEntryRepository logEntryRepository;
 
-    public LogEntryController(LogEntryRepository logEntryRepository) {
+    private final LogChangeRepository logChangeRepository;
+
+    public LogEntryController(LogEntryRepository logEntryRepository, LogChangeRepository logChangeRepository) {
         this.logEntryRepository = logEntryRepository;
+        this.logChangeRepository = logChangeRepository;
     }
 
     @PostMapping("/insertEntry")
@@ -89,5 +94,12 @@ public class LogEntryController {
             System.out.println("Verify failed");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PostMapping("/changeRequest")
+    public ResponseEntity<?> changeRequest(@RequestBody String changeBody) {
+        LogChange logChange = new LogChange(changeBody);
+        logChangeRepository.insert(logChange);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

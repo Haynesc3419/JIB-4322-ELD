@@ -22,4 +22,7 @@ public interface LogEntryService {
 
     @PUT("verify")
     Call<Void> verify(@Body String id);
+
+    @POST("changeRequest")
+    Call<Void> changeRequest(@Body String changeBody);
 }

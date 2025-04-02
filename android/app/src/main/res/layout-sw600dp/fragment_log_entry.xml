@@ -40,9 +40,15 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Submit Change Request"
-            android:textColor="@android:color/white" />
+            android:text="Submit Change" />
 
     </LinearLayout>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/change_request_text"
+        android:hint="Write a descriptive change request here and click submit"
+        android:text="" />
 
 </LinearLayout>
