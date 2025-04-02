@@ -104,7 +104,10 @@ public class ProfileFragment extends Fragment {
                 
                 // Set up switch listener
                 binding.switchMetricUnits.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    unitSettings.setUseMetric(isChecked);
+                    // Only update if the change is from user interaction
+                    if (buttonView.isPressed()) {
+                        unitSettings.setUseMetric(isChecked);
+                    }
                     updateDistanceDisplay();
                 });
 
@@ -113,7 +116,8 @@ public class ProfileFragment extends Fragment {
 
                 // Observe unit changes from other parts of the app
                 unitSettings.getUseMetric().observe(getViewLifecycleOwner(), isMetric -> {
-                    if (binding.switchMetricUnits.isChecked() != isMetric) {
+                    // Only update if the change is from another part of the app
+                    if (!binding.switchMetricUnits.isPressed()) {
                         binding.switchMetricUnits.setChecked(isMetric);
                     }
                     updateDistanceDisplay();

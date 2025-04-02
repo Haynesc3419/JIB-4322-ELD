@@ -38,12 +38,16 @@ public class SettingsFragment extends Fragment {
 
         // Listen for changes
         metricSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            unitSettings.setUseMetric(isChecked);
+            // Only update if the change is from user interaction
+            if (buttonView.isPressed()) {
+                unitSettings.setUseMetric(isChecked);
+            }
         });
 
         // Observe changes from other parts of the app
         unitSettings.getUseMetric().observe(getViewLifecycleOwner(), isMetric -> {
-            if (metricSwitch.isChecked() != isMetric) {
+            // Only update if the change is from another part of the app
+            if (!metricSwitch.isPressed()) {
                 metricSwitch.setChecked(isMetric);
             }
         });
