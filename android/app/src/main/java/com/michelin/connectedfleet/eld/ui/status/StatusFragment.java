@@ -103,6 +103,13 @@ public class StatusFragment extends Fragment {
         super.onResume();
         updateTimeZoneDisplay();
         startTimeUpdates();
+        
+        // Observe timezone changes
+        timeZoneManager.getCurrentTimeZone().observe(getViewLifecycleOwner(), timezone -> {
+            if (binding.textviewStatusTimezone != null) {
+                binding.textviewStatusTimezone.setText(timezone);
+            }
+        });
     }
 
     @Override

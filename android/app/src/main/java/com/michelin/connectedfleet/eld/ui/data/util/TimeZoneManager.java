@@ -1,42 +1,62 @@
 package com.michelin.connectedfleet.eld.ui.data.util;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import java.time.ZoneId;
-import java.util.TimeZone;
+import java.time.format.TextStyle;
+import java.util.Locale;
 
 public class TimeZoneManager {
     private static final String TAG = "TimeZoneManager";
-    private static TimeZoneManager instance;
     private final Context context;
-    private ZoneId currentZoneId;
+    private final MutableLiveData<String> currentTimeZone;
+    private final BroadcastReceiver timeZoneReceiver;
 
-    private TimeZoneManager(Context context) {
-        this.context = context.getApplicationContext();
-        this.currentZoneId = ZoneId.systemDefault();
+    public TimeZoneManager(Context context) {
+        this.context = context;
+        this.currentTimeZone = new MutableLiveData<>();
+        this.timeZoneReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (Intent.ACTION_TIMEZONE_CHANGED.equals(intent.getAction())) {
+                    Log.d(TAG, "Timezone changed, updating display");
+                    updateTimeZoneDisplay();
+                }
+            }
+        };
+        registerTimeZoneReceiver();
     }
 
-    public static synchronized TimeZoneManager getInstance(Context context) {
-        if (instance == null) {
-            instance = new TimeZoneManager(context);
+    private void registerTimeZoneReceiver() {
+        IntentFilter filter = new IntentFilter(Intent.ACTION_TIMEZONE_CHANGED);
+        context.registerReceiver(timeZoneReceiver, filter);
+    }
+
+    public void unregisterTimeZoneReceiver() {
+        try {
+            context.unregisterReceiver(timeZoneReceiver);
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "Error unregistering timezone receiver", e);
         }
-        return instance;
     }
 
-    public void updateTimeZone() {
-        ZoneId newZoneId = TimeZone.getDefault().toZoneId();
-        if (!newZoneId.equals(currentZoneId)) {
-            currentZoneId = newZoneId;
-            Log.d(TAG, "TimeZone updated to: " + currentZoneId);
-        }
-    }
-
-    public ZoneId getCurrentZoneId() {
-        return currentZoneId;
+    public LiveData<String> getCurrentTimeZone() {
+        return currentTimeZone;
     }
 
     public String getCurrentTimeZoneDisplay() {
-        return currentZoneId.getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.getDefault());
+        ZoneId zoneId = ZoneId.systemDefault();
+        return zoneId.getDisplayName(TextStyle.FULL, Locale.getDefault());
+    }
+
+    public void updateTimeZoneDisplay() {
+        currentTimeZone.setValue(getCurrentTimeZoneDisplay());
     }
 } 
