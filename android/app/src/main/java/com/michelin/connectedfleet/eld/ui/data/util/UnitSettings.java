@@ -17,8 +17,8 @@ public class UnitSettings {
     private final MutableLiveData<Boolean> useMetric;
 
     // Conversion constants
-    private static final double KM_TO_MILES = 0.621371;
     private static final double MILES_TO_KM = 1.60934;
+    private static final double KM_TO_MILES = 0.621371;
 
     public UnitSettings(Context context) {
         this.context = context;
@@ -40,42 +40,42 @@ public class UnitSettings {
         Log.d(TAG, "Unit preference changed to: " + (useMetric ? "metric" : "imperial"));
     }
 
-    // Distance conversions
-    public double convertDistance(double kilometers) {
-        return isMetric() ? kilometers : kmToMiles(kilometers);
+    // Distance conversions (assuming input is in miles)
+    public double convertDistance(double miles) {
+        return isMetric() ? milesToKm(miles) : miles;
     }
 
-    public String formatDistance(double kilometers) {
-        double value = convertDistance(kilometers);
+    public String formatDistance(double miles) {
+        double value = convertDistance(miles);
         String unit = isMetric() ? "km" : "mi";
         return String.format("%.2f %s", value, unit);
     }
 
-    // Speed conversions
-    public double convertSpeed(double kmh) {
-        return isMetric() ? kmh : kmhToMph(kmh);
+    // Speed conversions (assuming input is in mph)
+    public double convertSpeed(double mph) {
+        return isMetric() ? mphToKmh(mph) : mph;
     }
 
-    public String formatSpeed(double kmh) {
-        double value = convertSpeed(kmh);
+    public String formatSpeed(double mph) {
+        double value = convertSpeed(mph);
         String unit = isMetric() ? "km/h" : "mph";
         return String.format("%.1f %s", value, unit);
     }
 
     // Raw conversion methods
-    public static double kmToMiles(double km) {
-        return km * KM_TO_MILES;
-    }
-
     public static double milesToKm(double miles) {
         return miles * MILES_TO_KM;
     }
 
-    public static double kmhToMph(double kmh) {
-        return kmh * KM_TO_MILES;
+    public static double kmToMiles(double km) {
+        return km * KM_TO_MILES;
     }
 
     public static double mphToKmh(double mph) {
         return mph * MILES_TO_KM;
+    }
+
+    public static double kmhToMph(double kmh) {
+        return kmh * KM_TO_MILES;
     }
 } 

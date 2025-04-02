@@ -81,29 +81,6 @@
                 android:text="REGULATIONS"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
-
-            <!-- Metric Units Toggle -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="?android:attr/colorBackground">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="8dp"
-                    android:text="Metric units"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:textSize="16sp" />
-
-                <Switch
-                    android:id="@+id/switch_metric_units"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical" />
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

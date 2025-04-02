@@ -99,27 +99,11 @@ public class ProfileFragment extends Fragment {
             MainActivity activity = (MainActivity) requireActivity();
             unitSettings = activity.getUnitSettings();
             if (unitSettings != null) {
-                // Set initial switch state
-                binding.switchMetricUnits.setChecked(unitSettings.isMetric());
-                
-                // Set up switch listener
-                binding.switchMetricUnits.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    // Only update if the change is from user interaction
-                    if (buttonView.isPressed()) {
-                        unitSettings.setUseMetric(isChecked);
-                    }
-                    updateDistanceDisplay();
-                });
-
                 // Update initial display
                 updateDistanceDisplay();
 
-                // Observe unit changes from other parts of the app
+                // Observe unit changes from settings
                 unitSettings.getUseMetric().observe(getViewLifecycleOwner(), isMetric -> {
-                    // Only update if the change is from another part of the app
-                    if (!binding.switchMetricUnits.isPressed()) {
-                        binding.switchMetricUnits.setChecked(isMetric);
-                    }
                     updateDistanceDisplay();
                 });
             }
@@ -134,7 +118,9 @@ public class ProfileFragment extends Fragment {
 
     private void updateDistanceDisplay() {
         if (binding.distanceDriven != null && unitSettings != null) {
-            binding.distanceDriven.setText(unitSettings.formatDistance(distanceKm));
+            // Convert the stored imperial distance to the user's preferred unit
+            double distanceInMiles = distanceKm * 0.621371; // Convert km to miles
+            binding.distanceDriven.setText(unitSettings.formatDistance(distanceInMiles));
         }
     }
 
