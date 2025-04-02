@@ -50,6 +50,36 @@
                     android:textAlignment="center"
                     android:text="@array/statuses" />
 
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:text="@string/current_time_colon"
+                    android:layout_marginTop="8dp" />
+
+            <TextView
+                    android:id="@+id/textview_status_current_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:textAlignment="center"
+                    tools:text="12:00:00 PM" />
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:text="@string/current_timezone_colon"
+                    android:layout_marginTop="8dp" />
+
+            <TextView
+                    android:id="@+id/textview_status_timezone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textAlignment="center"
+                    tools:text="America/New_York" />
+
         </LinearLayout>
 
         <Spinner
@@ -57,7 +87,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:spinnerMode="dropdown" />
-
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

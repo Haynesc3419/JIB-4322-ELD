@@ -40,6 +40,8 @@
     <string name="hour_minute_filler">10:21:19</string>
     <string name="change_status">Change\n Status</string>
     <string name="current_status_colon">Current status:</string>
+    <string name="current_timezone_colon">Current Timezone:</string>
+    <string name="current_time_colon">Current Time:</string>
 
     <array name="statuses">
         <item>Driving</item>

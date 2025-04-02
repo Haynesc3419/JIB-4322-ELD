@@ -12,6 +12,7 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.michelin.connectedfleet.eld.worker.DrivingLimitWorker;
+import com.michelin.connectedfleet.eld.ui.data.util.TimeZoneManager;
 
 import java.util.concurrent.TimeUnit;
 
@@ -19,12 +20,23 @@ public class MyApplication extends Application {
     public static final String CHANNEL_ID = "driving_limit_channel";
     private static final String TAG = "MyApplication";
     private static final String WORKER_NAME = "DrivingLimitWorker";
+    private TimeZoneManager timeZoneManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
         createNotificationChannel();
         scheduleDrivingLimitWorker();
+        initializeTimeZoneManager();
+    }
+
+    private void initializeTimeZoneManager() {
+        timeZoneManager = TimeZoneManager.getInstance(this);
+        timeZoneManager.updateTimeZone();
+    }
+
+    public TimeZoneManager getTimeZoneManager() {
+        return timeZoneManager;
     }
 
     private void createNotificationChannel() {
