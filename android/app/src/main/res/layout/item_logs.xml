@@ -3,7 +3,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:padding="8dp">
 
     <LinearLayout
             android:id="@+id/linear_layout_date_wrapper"
@@ -34,18 +35,43 @@
 
     </LinearLayout>
 
-    <TextView
-            android:id="@+id/text_view_details"
-            android:layout_width="wrap_content"
+    <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/linear_layout_date_wrapper"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:paddingHorizontal="12dp"
-            tools:text="This is item # xx" />
+            app:layout_constraintStart_toEndOf="@id/linear_layout_date_wrapper"
+            app:layout_constraintEnd_toStartOf="@id/chevron_right">
+
+        <TextView
+                android:id="@+id/text_view_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="Status: DRIVING" />
+
+        <TextView
+                android:id="@+id/text_view_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                tools:text="Distance: 50 mi" />
+
+        <TextView
+                android:id="@+id/text_view_speed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                tools:text="Speed: 65 mph" />
+
+    </LinearLayout>
 
     <ImageButton
+            android:id="@+id/chevron_right"
             android:layout_width="wrap_content"
             android:background="@android:color/transparent"
             android:layout_height="wrap_content"
