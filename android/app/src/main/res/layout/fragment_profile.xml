@@ -4,20 +4,22 @@
     android:id="@+id/recyclerview_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="?android:attr/colorBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:background="?android:attr/colorBackground">
 
         <!-- Profile Info Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="start">
+            android:gravity="start"
+            android:background="?android:attr/colorBackground">
 
             <!-- Profile Image -->
             <com.google.android.material.imageview.ShapeableImageView
@@ -37,7 +39,7 @@
                 android:text="@string/default_profile_name"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"
+                android:textColor="?android:attr/textColorPrimary"
                 android:layout_marginBottom="8dp"/>
 
             <!-- Profile Email -->
@@ -47,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/default_profile_email"
                 android:textSize="16sp"
-                android:textColor="@android:color/black"
+                android:textColor="?android:attr/textColorPrimary"
                 android:layout_marginBottom="8dp"/>
 
             <!-- Distance Driven -->
@@ -56,15 +58,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:textColor="@color/gray_text"
+                android:textColor="?android:attr/textColorPrimary"
                 android:layout_marginBottom="8dp"/>
 
             <!-- Current Timezone -->
             <TextView
+                android:id="@+id/time_zone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:textColor="@android:color/black"
+                android:textColor="?android:attr/textColorPrimary"
                 android:layout_marginBottom="16dp"/>
 
             <!-- Regulations Button -->
@@ -74,29 +77,8 @@
                 android:layout_height="wrap_content"
                 android:text="REGULATIONS"
                 android:textColor="@android:color/white"
-                android:background="@color/status_valid"
+                android:backgroundTint="@color/status_valid"
                 android:layout_marginBottom="16dp"/>
-
-            <!-- Metric Units Toggle -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Metric units"
-                    android:textSize="16sp"
-                    android:textColor="@android:color/black"/>
-
-                <Switch
-                    android:id="@+id/switch_metric_units"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"/>
-            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
