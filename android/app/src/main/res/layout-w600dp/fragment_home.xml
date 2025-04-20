@@ -102,9 +102,9 @@
                             android:layout_height="wrap_content"
                             app:indicatorColor="@color/status_valid"
                             app:indicatorDirectionCircular="counterclockwise"
-                            app:indicatorSize="96dp"
+                            app:indicatorSize="200dp"
                             app:trackColor="@color/gray_light_20"
-                            app:trackThickness="8dp" />
+                            app:trackThickness="12dp" />
 
                         <TextView
                             android:id="@+id/text_hours_remaining_break"
@@ -112,7 +112,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="@string/hour_minute_filler"
-                            android:textSize="24sp"
+                            android:textSize="32sp"
                             android:textStyle="bold" />
                     </FrameLayout>
 
@@ -141,9 +141,9 @@
                             android:layout_gravity="center"
                             app:indicatorColor="@color/status_valid"
                             app:indicatorDirectionCircular="counterclockwise"
-                            app:indicatorSize="96dp"
+                            app:indicatorSize="200dp"
                             app:trackColor="@color/gray_light_20"
-                            app:trackThickness="8dp" />
+                            app:trackThickness="12dp" />
 
                         <TextView
                             android:id="@+id/text_hours_remaining_driving"
@@ -151,7 +151,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="@string/hour_minute_filler"
-                            android:textSize="24sp"
+                            android:textSize="32sp"
                             android:textStyle="bold" />
                     </FrameLayout>
 
@@ -179,9 +179,9 @@
                             android:layout_height="wrap_content"
                             app:indicatorColor="@color/status_valid"
                             app:indicatorDirectionCircular="counterclockwise"
-                            app:indicatorSize="96dp"
+                            app:indicatorSize="200dp"
                             app:trackColor="@color/gray_light_20"
-                            app:trackThickness="8dp" />
+                            app:trackThickness="12dp" />
 
 
                         <TextView
@@ -190,7 +190,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="@string/hour_minute_filler"
-                            android:textSize="24sp"
+                            android:textSize="32sp"
                             android:textStyle="bold" />
                     </FrameLayout>
 
