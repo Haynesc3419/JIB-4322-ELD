@@ -111,7 +111,8 @@ public class ProfileFragment extends Fragment {
             Log.e(TAG, "Error initializing UnitSettings", e);
             // Show distance in default format if UnitSettings is not available
             if (binding.distanceDriven != null) {
-                binding.distanceDriven.setText(getString(R.string.distance_driven_format, distanceKm));
+                String formattedDistance = String.format("%.2f km", distanceKm);
+                binding.distanceDriven.setText(formattedDistance);
             }
         }
     }
