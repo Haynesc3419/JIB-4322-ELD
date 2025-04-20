@@ -48,6 +48,7 @@ public class LogBookFragment extends Fragment {
 
     private FragmentLogBookBinding binding;
     private LogEntryService logsService;
+    private static final String TAG = "LogBookFragment";
 
     public LogBookFragment() {
         super();
@@ -87,14 +88,34 @@ public class LogBookFragment extends Fragment {
 
         SharedPreferences prefs = getContext().getSharedPreferences("tokens", Context.MODE_PRIVATE);
         String token = prefs.getString("token", null);
+        
+        if (token == null) {
+            Log.e(TAG, "No authentication token found");
+            // TODO: Show error message to user or redirect to login
+            return root;
+        }
+
         String cookieHeader = String.format("JSESSIONID=%s", token);
         Call<List<GetLogEntryResponseItem>> logEntriesRequest = logsService.getLogEntries(cookieHeader);
 
         logEntriesRequest.enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<GetLogEntryResponseItem>> call, Response<List<GetLogEntryResponseItem>> response) {
+                if (!response.isSuccessful()) {
+                    Log.e(TAG, "Server error: " + response.code() + " " + response.message());
+                    // TODO: Show error message to user
+                    return;
+                }
+
+                List<GetLogEntryResponseItem> body = response.body();
+                if (body == null || body.isEmpty()) {
+                    Log.d(TAG, "No logs found");
+                    // TODO: Show empty state to user
+                    return;
+                }
+
                 Map<LocalDate, LoggedDay> logsByDate = new HashMap<>();
-                for (GetLogEntryResponseItem item : response.body()) {
+                for (GetLogEntryResponseItem item : body) {
                     LocalDate date = item.dateTime().toLocalDate();
                     LoggedDay day = logsByDate.getOrDefault(date, new LoggedDay(date, new ArrayList<>(), Locale.getDefault()));
                     logsByDate.put(date, day);
@@ -103,12 +124,14 @@ public class LogBookFragment extends Fragment {
 
                 List<LoggedDay> sorted = new ArrayList<>(logsByDate.values());
                 sorted.sort(Comparator.reverseOrder());
+                Log.d(TAG, "Loaded " + sorted.size() + " days of logs");
                 adapter.submitList(sorted);
             }
 
             @Override
             public void onFailure(Call<List<GetLogEntryResponseItem>> call, Throwable throwable) {
-                Log.d("uh oh", "oops!!!");
+                Log.e(TAG, "Failed to load logs", throwable);
+                // TODO: Show error message to user
             }
         });
 

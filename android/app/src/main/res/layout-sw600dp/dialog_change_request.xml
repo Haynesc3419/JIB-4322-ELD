@@ -11,46 +11,38 @@
         android:id="@+id/dialog_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Log Entry Details"
+        android:text="Submit Change Request"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="16dp" />
 
-    <ScrollView
-        android:id="@+id/log_scroll_view"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/change_request_input_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:maxHeight="300dp"
         app:layout_constraintTop_toBottomOf="@id/dialog_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/button_bar">
+        app:counterEnabled="true"
+        app:counterMaxLength="500"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-        <LinearLayout
-            android:id="@+id/log_entries_container"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/change_request_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:divider="@drawable/divider_horizontal"
-            android:showDividers="middle"
-            android:paddingBottom="16dp">
-            <!-- Log entries will be added here dynamically -->
-            <TextView
-                android:id="@+id/entry_text_placeholder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Loading logs..."
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp" />
-        </LinearLayout>
-    </ScrollView>
+            android:hint="Please describe the requested changes"
+            android:inputType="textMultiLine"
+            android:minLines="3"
+            android:gravity="top" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <ProgressBar
-        android:id="@+id/progress_bar_signing"
+        android:id="@+id/progress_bar_change_request"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -66,18 +58,18 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@id/log_scroll_view"
+        app:layout_constraintTop_toBottomOf="@id/change_request_input_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         style="@style/Widget.MaterialComponents.Button.TextButton.Dialog.Flush">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_close"
+            android:id="@+id/button_cancel"
             style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Close" />
+            android:text="Cancel" />
 
         <View
             android:layout_width="0dp"
@@ -85,20 +77,12 @@
             android:layout_weight="1" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_sign"
-            style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="Sign" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_change_request"
+            android:id="@+id/button_submit_change"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Submit Change" />
+            android:text="Submit" />
 
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout> 
