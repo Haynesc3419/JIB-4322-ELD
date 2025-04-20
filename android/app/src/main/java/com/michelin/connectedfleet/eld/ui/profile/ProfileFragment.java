@@ -41,6 +41,7 @@ import com.michelin.connectedfleet.eld.ui.data.UserService;
 import com.michelin.connectedfleet.eld.ui.data.retrofitinterface.GetUserInfoResponse;
 import com.michelin.connectedfleet.eld.ui.data.util.UnitSettings;
 import com.bumptech.glide.Glide;
+import com.michelin.connectedfleet.eld.ui.login.LoginActivity;
 
 /**
  * Fragment that demonstrates a responsive layout pattern where the format of the content
@@ -74,7 +75,8 @@ public class ProfileFragment extends Fragment {
         // Get token and make API call if logged in
         SharedPreferences prefs = requireContext().getSharedPreferences("tokens", Context.MODE_PRIVATE);
         String token = prefs.getString("token", null);
-        
+        String cookieHeader = String.format("JSESSIONID=%s", token);
+
         if (token != null) {
             // User is logged in, fetch their data
             fetchUserData(token);
@@ -84,6 +86,18 @@ public class ProfileFragment extends Fragment {
             binding.profileName.setText(R.string.default_profile_name);
             binding.profileUsername.setText(R.string.default_profile_email);
         }
+
+        binding.signOutButton.setOnClickListener(v -> {
+            SharedPreferences.Editor editPrefs = prefs.edit();
+            editPrefs.remove("token");
+            editPrefs.apply();
+
+            userService.logout(cookieHeader);
+
+            Intent myIntent = new Intent(getActivity(), LoginActivity.class);
+            getActivity().startActivity(myIntent);
+            getActivity().finish();
+        });
 
         return root;
     }

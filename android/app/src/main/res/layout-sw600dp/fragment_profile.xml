@@ -118,6 +118,19 @@
                     app:cornerRadius="8dp"
                     android:backgroundTint="@color/primary_blue" />
 
+                <!-- Sign out Button -->
+                <Button
+                        android:id="@+id/sign_out_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sign out"
+                        android:textColor="@android:color/white"
+                        android:paddingHorizontal="24dp"
+                        android:paddingVertical="12dp"
+                        app:cornerRadius="8dp"
+                        android:backgroundTint="@color/primary_blue" />
+
+
             </LinearLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

@@ -79,6 +79,16 @@
                 android:textColor="@android:color/white"
                 android:backgroundTint="@color/status_valid"
                 android:layout_marginBottom="16dp"/>
+
+            <!-- Sign out Button -->
+            <Button
+                    android:id="@+id/sign_out_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sign out"
+                    android:textColor="@android:color/white"
+                    android:backgroundTint="@color/status_valid"
+                    android:layout_marginBottom="16dp"/>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
