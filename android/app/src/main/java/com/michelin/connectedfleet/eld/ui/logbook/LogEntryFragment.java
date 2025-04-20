@@ -97,7 +97,7 @@ public class LogEntryFragment extends DialogFragment {
         if (dialog != null && dialog.getWindow() != null) {
             // Use WRAP_CONTENT for height and a specific width or MATCH_PARENT based on design
             // Let's use wrap_content for height and match_parent for width in this case
-            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             // You might want to set a minWidth using dimens as done in ChangeRequestDialog if needed
         }
     }
