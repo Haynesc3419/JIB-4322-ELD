@@ -69,19 +69,18 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
-            android:gravity="center_horizontal"
+            android:gravity="center"
             android:orientation="vertical">
-
-
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:baselineAligned="false"
-                android:gravity="center_horizontal"
+                android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingHorizontal="12dp">
 
@@ -102,9 +101,9 @@
                             android:layout_height="wrap_content"
                             app:indicatorColor="@color/status_valid"
                             app:indicatorDirectionCircular="counterclockwise"
-                            app:indicatorSize="200dp"
+                            app:indicatorSize="250dp"
                             app:trackColor="@color/gray_light_20"
-                            app:trackThickness="12dp" />
+                            app:trackThickness="14dp" />
 
                         <TextView
                             android:id="@+id/text_hours_remaining_break"
@@ -112,7 +111,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="@string/hour_minute_filler"
-                            android:textSize="32sp"
+                            android:textSize="36sp"
                             android:textStyle="bold" />
                     </FrameLayout>
 
@@ -141,9 +140,9 @@
                             android:layout_gravity="center"
                             app:indicatorColor="@color/status_valid"
                             app:indicatorDirectionCircular="counterclockwise"
-                            app:indicatorSize="200dp"
+                            app:indicatorSize="250dp"
                             app:trackColor="@color/gray_light_20"
-                            app:trackThickness="12dp" />
+                            app:trackThickness="14dp" />
 
                         <TextView
                             android:id="@+id/text_hours_remaining_driving"
@@ -151,7 +150,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="@string/hour_minute_filler"
-                            android:textSize="32sp"
+                            android:textSize="36sp"
                             android:textStyle="bold" />
                     </FrameLayout>
 
@@ -179,9 +178,9 @@
                             android:layout_height="wrap_content"
                             app:indicatorColor="@color/status_valid"
                             app:indicatorDirectionCircular="counterclockwise"
-                            app:indicatorSize="200dp"
+                            app:indicatorSize="250dp"
                             app:trackColor="@color/gray_light_20"
-                            app:trackThickness="12dp" />
+                            app:trackThickness="14dp" />
 
 
                         <TextView
@@ -190,7 +189,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="@string/hour_minute_filler"
-                            android:textSize="32sp"
+                            android:textSize="36sp"
                             android:textStyle="bold" />
                     </FrameLayout>
 
