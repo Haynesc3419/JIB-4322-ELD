@@ -3,6 +3,7 @@ package com.michelin.connectedfleet.eld;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Menu;
+import android.util.Log;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -17,18 +18,24 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.michelin.connectedfleet.eld.databinding.ActivityMainBinding;
+import com.michelin.connectedfleet.eld.ui.data.util.TimeZoneManager;
+import com.michelin.connectedfleet.eld.ui.data.util.UnitSettings;
+import com.michelin.connectedfleet.eld.ui.data.util.TimerManager;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
     private AppBarConfiguration mAppBarConfiguration;
+    private ActivityMainBinding binding;
+    private TimeZoneManager timeZoneManager;
+    private UnitSettings unitSettings;
 
     public static BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarMain.toolbar);
@@ -59,17 +66,19 @@ public class MainActivity extends AppCompatActivity {
             NavigationUI.setupWithNavController(bottomNavigationView, navController);
             bottomNavigationView.setSelectedItemId(R.id.nav_home);
         }
+
+        timeZoneManager = new TimeZoneManager(this);
+        unitSettings = new UnitSettings(this);
+
+        // Initialize TimerManager with context
+        TimerManager.getInstance().setContext(this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean result = super.onCreateOptionsMenu(menu);
-        // Using findViewById because NavigationView exists in different layout files
-        // between w600dp and w1240dp
         NavigationView navView = findViewById(R.id.nav_view);
         if (navView == null) {
-            // The navigation drawer already has the items including the items in the overflow menu
-            // We only inflate the overflow menu if the navigation drawer isn't visible
             getMenuInflater().inflate(R.menu.overflow, menu);
         }
         return result;
@@ -92,5 +101,21 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (timeZoneManager != null) {
+            timeZoneManager.unregisterTimeZoneReceiver();
+        }
+    }
+
+    public TimeZoneManager getTimeZoneManager() {
+        return timeZoneManager;
+    }
+
+    public UnitSettings getUnitSettings() {
+        return unitSettings;
     }
 }

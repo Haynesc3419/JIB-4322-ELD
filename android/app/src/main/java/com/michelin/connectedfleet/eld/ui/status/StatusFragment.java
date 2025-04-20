@@ -1,6 +1,8 @@
 package com.michelin.connectedfleet.eld.ui.status;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,17 +19,29 @@ import com.michelin.connectedfleet.eld.DriverStatus;
 import com.michelin.connectedfleet.eld.MainActivity;
 import com.michelin.connectedfleet.eld.R;
 import com.michelin.connectedfleet.eld.databinding.FragmentStatusBinding;
+import com.michelin.connectedfleet.eld.ui.data.util.TimeZoneManager;
 
-import java.util.Objects;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class StatusFragment extends Fragment {
 
     private FragmentStatusBinding binding;
+    private TimeZoneManager timeZoneManager;
+    private Handler timeUpdateHandler;
+    private static final long TIME_UPDATE_INTERVAL = 1000; // 1 second
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentStatusBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        timeZoneManager = ((MainActivity) requireActivity()).getTimeZoneManager();
+        timeUpdateHandler = new Handler(Looper.getMainLooper());
+        
+        updateTimeZoneDisplay();
+        startTimeUpdates();
 
         final TextView textView = binding.textviewStatusCurrentStatus;
 
@@ -50,16 +64,63 @@ public class StatusFragment extends Fragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
         return root;
     }
 
+    private void updateTimeZoneDisplay() {
+        if (binding.textviewStatusTimezone != null) {
+            binding.textviewStatusTimezone.setText(timeZoneManager.getCurrentTimeZoneDisplay());
+        }
+    }
+
+    private void updateTimeDisplay() {
+        if (binding.textviewStatusCurrentTime != null) {
+            LocalTime currentTime = LocalTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm:ss a", Locale.getDefault());
+            binding.textviewStatusCurrentTime.setText(currentTime.format(formatter));
+        }
+    }
+
+    private void startTimeUpdates() {
+        timeUpdateHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                updateTimeDisplay();
+                timeUpdateHandler.postDelayed(this, TIME_UPDATE_INTERVAL);
+            }
+        });
+    }
+
+    private void stopTimeUpdates() {
+        timeUpdateHandler.removeCallbacksAndMessages(null);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateTimeZoneDisplay();
+        startTimeUpdates();
+        
+        timeZoneManager.getCurrentTimeZone().observe(getViewLifecycleOwner(), timezone -> {
+            if (binding.textviewStatusTimezone != null) {
+                binding.textviewStatusTimezone.setText(timezone);
+            }
+        });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopTimeUpdates();
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        stopTimeUpdates();
         binding = null;
     }
 }

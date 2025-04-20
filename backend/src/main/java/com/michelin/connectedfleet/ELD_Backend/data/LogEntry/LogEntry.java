@@ -13,10 +13,13 @@ public class LogEntry {
     private LocalDateTime dateTime;
     private String status;
 
-    public LogEntry(String username, String status) {
+    private String verifiedByDriver;
+
+    public LogEntry(String username, String status, String verifiedByDriver) {
         this.username = username;
         this.dateTime = LocalDateTime.now();
         this.status = status;
+        this.verifiedByDriver = verifiedByDriver;
     }
 
     public LocalDateTime getDateTime() {
@@ -29,6 +32,14 @@ public class LogEntry {
 
     public String getId() {
         return id;
+    }
+
+    public String getVerifiedByDriver() {
+        return verifiedByDriver;
+    }
+
+    public void setVerifiedByDriver(String verifiedByDriver) {
+        this.verifiedByDriver = verifiedByDriver;
     }
 
 }

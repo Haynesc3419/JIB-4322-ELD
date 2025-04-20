@@ -30,9 +30,12 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import com.michelin.connectedfleet.eld.MainActivity;
+import com.michelin.connectedfleet.eld.R;
 import com.michelin.connectedfleet.eld.databinding.FragmentProfileBinding;
 import com.michelin.connectedfleet.eld.ui.data.UserService;
 import com.michelin.connectedfleet.eld.ui.data.retrofitinterface.GetUserInfoResponse;
+import com.michelin.connectedfleet.eld.ui.data.util.UnitSettings;
 
 /**
  * Fragment that demonstrates a responsive layout pattern where the format of the content
@@ -41,87 +44,120 @@ import com.michelin.connectedfleet.eld.ui.data.retrofitinterface.GetUserInfoResp
  * and shows items using GridLayoutManager in a large screen.
  */
 public class ProfileFragment extends Fragment {
-
+    private static final String TAG = "ProfileFragment";
     private FragmentProfileBinding binding;
     private UserService userService;
+    private UnitSettings unitSettings;
+    private double distanceKm = 60491.5; // TODO: Link to driver information
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        ProfileViewModel profileViewModel =
-                new ViewModelProvider(this).get(ProfileViewModel.class);
-
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        TextView usernameView = binding.profileUsername;
-        TextView nameView = binding.profileName;
+        // Initialize basic UI elements that don't depend on login state
+        initializeBasicUI();
 
-        // Set up the button to open a webpage
-        binding.regulationsButton.setOnClickListener(v -> {
-            String url = "https://www.fmcsa.dot.gov/hours-service/elds/electronic-logging-devices";
-            CustomTabsIntent intent = new CustomTabsIntent.Builder()
-                    .build();
-            intent.launchUrl(requireContext(), Uri.parse(url));  // Use requireContext() for non-null context
-        });
+        // Set up API client for user data
+        setupApiClient();
 
-        // Set units and distance driven
-        binding.distanceDriven.setText("Miles Driven: 37587.68"); // TODO: Link to driver information
-        binding.switchMetricUnits.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                binding.distanceDriven.setText("Kilometers Driven: 60491.5");
-            } else {
-                binding.distanceDriven.setText("Miles Driven: 37587.68");
-            }
-        });
-
-        // Set up timezone localization
-        TimeZone timezone = TimeZone.getDefault();
-        SimpleDateFormat sdf = new SimpleDateFormat("zzz XXX"); // "zzz" for short name, "XXX" for offset
-        sdf.setTimeZone(TimeZone.getDefault());
-        if (binding.timeZone != null) {
-            binding.timeZone.setText("Current Timezone: " + sdf.format(new Date()));
+        // Get token and make API call if logged in
+        SharedPreferences prefs = requireContext().getSharedPreferences("tokens", Context.MODE_PRIVATE);
+        String token = prefs.getString("token", null);
+        
+        if (token != null) {
+            // User is logged in, fetch their data
+            fetchUserData(token);
+        } else {
+            // User is not logged in, show default state
+            Log.d(TAG, "User is not logged in");
+            binding.profileName.setText(R.string.default_profile_name);
+            binding.profileUsername.setText(R.string.default_profile_email);
         }
 
-        // Set up Retrofit and Gson for API call
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) (json, typeOfT, context) -> {
-            return LocalDateTime.parse(json.getAsString());
+        return root;
+    }
+
+    private void initializeBasicUI() {
+        // Set up timezone display
+        TimeZone timezone = TimeZone.getDefault();
+        SimpleDateFormat sdf = new SimpleDateFormat("zzz XXX");
+        sdf.setTimeZone(timezone);
+        if (binding.timeZone != null) {
+            binding.timeZone.setText(getString(R.string.current_timezone_format, sdf.format(new Date())));
+        }
+
+        // Set up regulations button
+        binding.regulationsButton.setOnClickListener(v -> {
+            String url = "https://www.fmcsa.dot.gov/regulations/hours-service/summary-hours-service-regulations";
+            CustomTabsIntent intent = new CustomTabsIntent.Builder().build();
+            intent.launchUrl(requireContext(), Uri.parse(url));
         });
 
-        GsonConverterFactory gsonConverterFactory = GsonConverterFactory.create(gsonBuilder.create());
+        // Initialize UnitSettings and distance display if available
+        try {
+            MainActivity activity = (MainActivity) requireActivity();
+            unitSettings = activity.getUnitSettings();
+            if (unitSettings != null) {
+                // Update initial display
+                updateDistanceDisplay();
+
+                // Observe unit changes from settings
+                unitSettings.getUseMetric().observe(getViewLifecycleOwner(), isMetric -> {
+                    updateDistanceDisplay();
+                });
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error initializing UnitSettings", e);
+            // Show distance in default format if UnitSettings is not available
+            if (binding.distanceDriven != null) {
+                String formattedDistance = String.format("%.2f km", distanceKm);
+                binding.distanceDriven.setText(formattedDistance);
+            }
+        }
+    }
+
+    private void updateDistanceDisplay() {
+        if (binding.distanceDriven != null && unitSettings != null) {
+            // Convert the stored imperial distance to the user's preferred unit
+            double distanceInMiles = distanceKm * 0.621371; // Convert km to miles
+            binding.distanceDriven.setText(unitSettings.formatDistance(distanceInMiles));
+        }
+    }
+
+    private void setupApiClient() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, 
+            (JsonDeserializer<LocalDateTime>) (json, typeOfT, context) -> LocalDateTime.parse(json.getAsString()));
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:8080/users/")  // Localhost for Android Emulator
-                .addConverterFactory(gsonConverterFactory)
+                .baseUrl("http://10.0.2.2:8080/users/")
+                .addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()))
                 .build();
 
         userService = retrofit.create(UserService.class);
+    }
 
-        // Get token from SharedPreferences and make API call
-        SharedPreferences prefs = getContext().getSharedPreferences("tokens", Context.MODE_PRIVATE);
-        String token = prefs.getString("token", null);
+    private void fetchUserData(String token) {
         String cookieHeader = String.format("JSESSIONID=%s", token);
-
-        // Make the API call to fetch user information
         Call<GetUserInfoResponse> userInfoRequest = userService.getInfo(cookieHeader);
         userInfoRequest.enqueue(new Callback<GetUserInfoResponse>() {
             @Override
             public void onResponse(Call<GetUserInfoResponse> call, Response<GetUserInfoResponse> response) {
-                if (response.body() != null) {
-                    usernameView.setText(response.body().username());
-                    nameView.setText(response.body().firstName() + " " + response.body().lastName());
+                if (response.isSuccessful() && response.body() != null && binding != null) {
+                    GetUserInfoResponse userData = response.body();
+                    binding.profileUsername.setText(userData.username());
+                    binding.profileName.setText(String.format("%s %s", userData.firstName(), userData.lastName()));
                 } else {
-                    Log.d("ProfileFragment", "Failed to retrieve user data.");
+                    Log.d(TAG, "Failed to retrieve user data");
                 }
             }
 
             @Override
-            public void onFailure(Call<GetUserInfoResponse> call, Throwable throwable) {
-                Log.d("ProfileFragment", "API call failed: " + throwable.getMessage());
+            public void onFailure(Call<GetUserInfoResponse> call, Throwable t) {
+                Log.e(TAG, "API call failed", t);
             }
         });
-
-        return root;
     }
 
     @Override

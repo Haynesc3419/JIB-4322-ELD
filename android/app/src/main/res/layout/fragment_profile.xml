@@ -1,103 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/recyclerview_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:gravity="center_horizontal"
-    android:paddingTop="50dp">
+    android:background="?android:attr/colorBackground">
 
-    <!-- Profile Section (Aligned to Top-Center) -->
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:padding="16dp"
+        android:background="?android:attr/colorBackground">
 
-        <!-- Profile Image -->
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/profile_image"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@drawable/account_circle_24px"
-            android:scaleType="centerCrop"
-            android:layout_marginBottom="16dp"/>
-
-        <!-- Profile Name -->
-        <TextView
-            android:id="@+id/profile_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="John Doe"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@color/black_text"
-            android:layout_marginBottom="8dp"/>
-
-        <!-- Profile Email -->
-        <TextView
-            android:id="@+id/profile_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="johndoe@example.com"
-            android:textSize="16sp"
-            android:layout_marginBottom="8sp"
-            android:textColor="@android:color/black"/>
-
-        <TextView
-            android:id="@+id/distance_driven"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Distance Driven: Unknown"
-            android:textSize="16sp"
-            android:layout_marginBottom="8sp"
-            android:textColor="@android:color/black"/>
-
-        <TextView
-            android:id="@+id/time_zone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Current Timezone: Unknown"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"/>
-
-        <!-- Button with Rounded Corners and Modern Look -->
-        <Button
-            android:id="@+id/regulations_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Regulations"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:gravity="center"
-            android:layout_margin="8dp"
-            android:backgroundTint="@android:color/holo_blue_dark">
-
-        </Button>  <!-- Blue background --><!-- Shadow effect for elevation -->
-
+        <!-- Profile Info Section -->
         <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center">
+            android:orientation="vertical"
+            android:gravity="start"
+            android:background="?android:attr/colorBackground">
 
+            <!-- Profile Image -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profile_image"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginBottom="16dp"
+                android:src="@drawable/account_circle_24px"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/CircleImageView"/>
+
+            <!-- Profile Name -->
             <TextView
+                android:id="@+id/profile_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Metric units"
-                android:textSize="16sp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="8dp"/>
+                android:text="@string/default_profile_name"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="?android:attr/textColorPrimary"
+                android:layout_marginBottom="8dp"/>
 
-            <Switch
-                android:id="@+id/switch_metric_units"
+            <!-- Profile Email -->
+            <TextView
+                android:id="@+id/profile_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"/>
+                android:text="@string/default_profile_email"
+                android:textSize="16sp"
+                android:textColor="?android:attr/textColorPrimary"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Distance Driven -->
+            <TextView
+                android:id="@+id/distance_driven"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="?android:attr/textColorPrimary"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Current Timezone -->
+            <TextView
+                android:id="@+id/time_zone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="?android:attr/textColorPrimary"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Regulations Button -->
+            <Button
+                android:id="@+id/regulations_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="REGULATIONS"
+                android:textColor="@android:color/white"
+                android:backgroundTint="@color/status_valid"
+                android:layout_marginBottom="16dp"/>
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>
 

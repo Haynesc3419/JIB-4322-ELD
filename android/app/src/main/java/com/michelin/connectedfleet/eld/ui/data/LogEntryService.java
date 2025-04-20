@@ -11,6 +11,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 
 public interface LogEntryService {
     @POST("insertEntry")
@@ -18,4 +19,10 @@ public interface LogEntryService {
 
     @GET("/logs")
     Call<List<GetLogEntryResponseItem>> getLogEntries(@Header("cookie") String cookie);
+
+    @PUT("verify")
+    Call<Void> verify(@Body String id);
+
+    @POST("changeRequest")
+    Call<Void> changeRequest(@Body String changeBody);
 }
