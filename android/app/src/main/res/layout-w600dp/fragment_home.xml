@@ -21,8 +21,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginHorizontal="16dp"
             android:gravity="start"
             android:paddingTop="0sp"
             android:orientation="horizontal">
@@ -30,7 +31,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="32dp"
+                android:layout_marginStart="16dp"
                 android:background="@drawable/rounded_button_background"
                 android:elevation="6dp"
                 android:orientation="horizontal">
@@ -118,7 +119,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/time_remaining_break" />
+                        android:layout_marginTop="12dp"
+                        android:text="@string/time_remaining_break"
+                        android:textSize="24sp"
+                        android:alpha="0.87" />
 
                 </LinearLayout>
 
@@ -157,7 +161,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/time_remaining_driving" />
+                        android:layout_marginTop="12dp"
+                        android:text="@string/time_remaining_driving"
+                        android:textSize="24sp"
+                        android:alpha="0.87" />
 
                 </LinearLayout>
 
@@ -196,7 +203,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/time_remaining_day_reset" />
+                        android:layout_marginTop="12dp"
+                        android:text="@string/time_remaining_day_reset"
+                        android:textSize="24sp"
+                        android:alpha="0.87" />
 
                 </LinearLayout>
 
