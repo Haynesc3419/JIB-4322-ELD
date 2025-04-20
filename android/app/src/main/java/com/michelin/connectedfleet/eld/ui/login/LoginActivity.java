@@ -1,7 +1,9 @@
 package com.michelin.connectedfleet.eld.ui.login;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -40,6 +42,14 @@ public class LoginActivity extends AppCompatActivity {
 
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory(getApplication()))
                 .get(LoginViewModel.class);
+
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences("tokens", Context.MODE_PRIVATE);
+        String token = prefs.getString("token", null);
+        if (token != null) {
+            Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
+            LoginActivity.this.startActivity(myIntent);
+            finish();
+        }
 
         setSupportActionBar(binding.toolbar);
         final TextInputEditText usernameEditText = (TextInputEditText) binding.username;
