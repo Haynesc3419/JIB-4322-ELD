@@ -1,86 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/recyclerview_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:padding="16dp"
-    android:background="?android:attr/colorBackground"
-    android:gravity="center_vertical"
-    android:paddingTop="50dp">
+    android:background="?android:attr/colorBackground">
 
-    <!-- Profile Section -->
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="top"
-        android:orientation="horizontal"
-        android:background="?android:attr/colorBackground">
-
-        <!-- Profile Image -->
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/profile_image"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/account_circle_24px" />
+        android:layout_margin="24dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="?android:attr/colorBackground">
+            android:orientation="horizontal"
+            android:padding="24dp">
 
-            <!-- Profile Name -->
-            <TextView
-                android:id="@+id/profile_name"
+            <!-- Profile Image Section -->
+            <FrameLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/default_profile_name"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content">
 
-            <!-- Profile Email -->
-            <TextView
-                android:id="@+id/profile_username"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/default_profile_email"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="16sp" />
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/account_circle_24px"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:shapeAppearanceOverlay="@style/CircularImageView" />
 
-            <TextView
-                android:id="@+id/distance_driven"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="16sp" />
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="8dp"
+                    android:src="@drawable/camera_24px"
+                    android:background="@drawable/circle_background"
+                    android:padding="6dp" />
+            </FrameLayout>
 
-            <TextView
-                android:id="@+id/time_zone"
-                android:layout_width="wrap_content"
+            <!-- Profile Info Section -->
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="16sp" />
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="24dp">
 
-            <!-- Regulations Button -->
-            <Button
-                android:id="@+id/regulations_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:backgroundTint="@color/status_valid"
-                android:gravity="center"
-                android:text="REGULATIONS"
-                android:textColor="@android:color/white"
-                android:textSize="16sp" />
+                <!-- Name and Email Section -->
+                <TextView
+                    android:id="@+id/profile_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/default_profile_name"
+                    android:textAppearance="?attr/textAppearanceHeadline4"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/profile_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/default_profile_email"
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    android:alpha="0.87"
+                    android:layout_marginBottom="24dp" />
+
+                <!-- Stats Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="24dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="16dp">
+
+                        <TextView
+                            android:id="@+id/distance_driven"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?attr/textAppearanceBody1" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/time_zone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?attr/textAppearanceBody1" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Regulations Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/regulations_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/view_regulations"
+                    android:textColor="@android:color/white"
+                    android:paddingHorizontal="24dp"
+                    android:paddingVertical="12dp"
+                    app:cornerRadius="8dp"
+                    android:backgroundTint="@color/primary_blue" />
+
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
