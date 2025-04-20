@@ -68,7 +68,7 @@
     <string name="default_profile_name">Guest User</string>
     <string name="default_profile_email">Please log in</string>
     <string name="current_timezone_format">Current Timezone: %s</string>
-    <string name="distance_driven_format">%s %s</string>
+    <string name="distance_driven_format">%1$.2f %2$s</string>
     <string name="total_distance_label">Total Distance Driven (Career)</string>
     <string name="loading">Loading...</string>
     <string name="use_metric_units">Use Metric Units</string>

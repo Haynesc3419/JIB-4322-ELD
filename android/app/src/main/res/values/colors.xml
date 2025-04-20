@@ -21,4 +21,6 @@
 
     <color name="gray_text">#757575</color>
     <color name="divider_color">#DDDDDD</color>
+
+    <color name="background_color">#FFFFFF</color>
 </resources>

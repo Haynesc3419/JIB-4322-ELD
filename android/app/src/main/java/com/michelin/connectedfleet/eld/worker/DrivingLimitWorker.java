@@ -11,9 +11,9 @@ import com.michelin.connectedfleet.eld.ui.data.NotificationHelper;
 import com.michelin.connectedfleet.eld.ui.data.util.TimerManager;
 
 public class DrivingLimitWorker extends Worker {
-    private static final int CRITICAL_THRESHOLD_MINUTES = 15;
-    private static final int WARNING_THRESHOLD_MINUTES = 30;
-    private static final int NOTICE_THRESHOLD_MINUTES = 60;
+    private static final int CRITICAL_THRESHOLD_MINUTES = 50;
+    private static final int WARNING_THRESHOLD_MINUTES = 53;
+    private static final int NOTICE_THRESHOLD_MINUTES = 58;
 
     public DrivingLimitWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
