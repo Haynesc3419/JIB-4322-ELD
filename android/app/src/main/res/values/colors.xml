@@ -23,4 +23,5 @@
     <color name="divider_color">#DDDDDD</color>
 
     <color name="background_color">#FFFFFF</color>
+    <color name="surface_color">#F5F5F5</color>
 </resources>
