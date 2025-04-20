@@ -21,13 +21,30 @@
             android:padding="24dp">
 
             <!-- Profile Image Section -->
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/profile_image"
-                android:layout_width="160dp"
-                android:layout_height="160dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/account_circle_24px"
-                app:shapeAppearanceOverlay="@style/CircularImageView" />
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/account_circle_24px"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:shapeAppearanceOverlay="@style/CircularImageView" />
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="8dp"
+                    android:src="@drawable/camera_24px"
+                    android:background="@drawable/circle_background"
+                    android:padding="6dp" />
+            </FrameLayout>
 
             <!-- Profile Info Section -->
             <LinearLayout

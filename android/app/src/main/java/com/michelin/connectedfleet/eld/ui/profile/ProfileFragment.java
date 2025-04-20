@@ -1,20 +1,24 @@
 package com.michelin.connectedfleet.eld.ui.profile;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -36,6 +40,7 @@ import com.michelin.connectedfleet.eld.databinding.FragmentProfileBinding;
 import com.michelin.connectedfleet.eld.ui.data.UserService;
 import com.michelin.connectedfleet.eld.ui.data.retrofitinterface.GetUserInfoResponse;
 import com.michelin.connectedfleet.eld.ui.data.util.UnitSettings;
+import com.bumptech.glide.Glide;
 
 /**
  * Fragment that demonstrates a responsive layout pattern where the format of the content
@@ -45,15 +50,20 @@ import com.michelin.connectedfleet.eld.ui.data.util.UnitSettings;
  */
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
+    private static final int PICK_IMAGE_REQUEST = 1;
     private FragmentProfileBinding binding;
     private UserService userService;
     private UnitSettings unitSettings;
     private double distanceKm = 60491.5; // TODO: Link to driver information
 
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        // Set up profile image click listener
+        binding.profileImage.setOnClickListener(v -> selectImage());
 
         // Initialize basic UI elements that don't depend on login state
         initializeBasicUI();
@@ -158,6 +168,46 @@ public class ProfileFragment extends Fragment {
                 Log.e(TAG, "API call failed", t);
             }
         });
+    }
+
+    private void selectImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+            Uri imageUri = data.getData();
+            try {
+                // Load the selected image into the ImageView
+                Glide.with(this)
+                    .load(imageUri)
+                    .centerCrop()
+                    .into(binding.profileImage);
+
+                // Here you would typically upload the image to your server
+                // uploadImageToServer(imageUri);
+                
+            } catch (Exception e) {
+                Log.e(TAG, "Error loading profile image", e);
+                Toast.makeText(getContext(), "Failed to load image", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    // Add this method if you want to implement server upload
+    private void uploadImageToServer(Uri imageUri) {
+        // TODO: Implement image upload to your server
+        // This would typically involve:
+        // 1. Compressing the image
+        // 2. Converting to Base64 or multipart form data
+        // 3. Making an API call to your server
+        // 4. Handling success/failure
     }
 
     @Override
