@@ -17,4 +17,7 @@ public interface UserService {
 
     @GET("info")
     Call<GetUserInfoResponse> getInfo(@Header("cookie") String cookie);
+
+    @POST("logout")
+    Call<Void> logout(@Header("cookie") String cookie);
 }
