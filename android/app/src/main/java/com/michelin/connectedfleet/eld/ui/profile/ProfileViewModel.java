@@ -1,11 +1,11 @@
 package com.michelin.connectedfleet.eld.ui.profile;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-
-import java.util.ArrayList;
-import java.util.List;
+//import androidx.lifecycle.LiveData;
+//import androidx.lifecycle.MutableLiveData;
+//import androidx.lifecycle.ViewModel;
+//
+//import java.util.ArrayList;
+//import java.util.List;
 
 //public class ProfileViewModel extends ViewModel {
 //
