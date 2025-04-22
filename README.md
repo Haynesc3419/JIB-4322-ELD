@@ -25,7 +25,6 @@ This repository contains the Electronic Logging Device (ELD) application built f
 
 ## Documentation
 - [Installation Guide](INSTALLATION.md): Step-by-step instructions for setting up and running the application
-- [Design Document](DESIGN.md): Detailed technical design and architecture of the system
 
 ## Getting Started
 For installation and setup instructions, please refer to our [Installation Guide](INSTALLATION.md).
