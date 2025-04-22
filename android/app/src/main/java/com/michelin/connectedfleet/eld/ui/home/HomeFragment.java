@@ -83,6 +83,8 @@ public class HomeFragment extends Fragment {
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // timer currently starts when home fragment is created and is set to an arbitrary value
+        // TODO cleanup timer logic
         TimerManager timer = TimerManager.getInstance();
         timer.startTimer("break", 1 * 60 * 60 * 1000);
         timer.pauseTimer("break");
