@@ -3,91 +3,125 @@
 This guide provides step-by-step instructions for setting up and running the Electronic Logging Device (ELD) application for Michelin Connected Fleet.
 
 ## Table of Contents
-- [Prerequisites](#prerequisites)
-- [Backend Setup](#backend-setup)
-- [Android App Setup](#android-app-setup)
-- [Running the Application](#running-the-application)
+- [Pre-requisites](#pre-requisites)
+- [Dependent Libraries](#dependent-libraries)
+- [Download Instructions](#download-instructions)
+- [Build Instructions](#build-instructions)
+- [Installation Steps](#installation-steps)
+- [Run Instructions](#run-instructions)
 - [Troubleshooting](#troubleshooting)
 
-## Prerequisites
+## Pre-requisites
 
-### For Backend Development
+### Hardware Requirements
+- Computer with at least 8GB RAM
+- Android device or emulator:
+  - Recommended: Pixel Tablet API 34 emulator (Android 14.0 "UpsideDownCake", arm64)
+  - Alternative: Physical device running Android 8.0 or higher
+
+### Software Requirements
 - **Java Development Kit (JDK)**: Version 21 or higher
   - Download from: [Oracle JDK](https://www.oracle.com/java/technologies/downloads/) or [OpenJDK](https://adoptium.net/)
 - **Gradle**: Version 8.0 or higher
   - Download from: [Gradle](https://gradle.org/install/)
 - **MongoDB**: Version 6.0 or higher
   - Download from: [MongoDB](https://www.mongodb.com/try/download/community)
-- **IDE**: IntelliJ IDEA, Eclipse, or VS Code
-
-### For Android App Development
 - **Android Studio**: Latest version
   - Download from: [Android Studio](https://developer.android.com/studio)
-- **Android SDK**: API level 33 (Android 13) or higher
-- **Android Emulator** or physical Android device running Android 8.0 or higher, We use Pixel Tablet API 34 downloaded via Android Studio
 
-## Backend Setup
+## Dependent Libraries
 
-1. **Clone the Repository**
+The following libraries are automatically managed by Gradle and included in the build:
+
+### Backend Dependencies
+- Spring Boot 3.4.2
+- Spring Data MongoDB
+- Spring Security
+- JWT (JSON Web Tokens)
+- Lombok
+- JUnit and Mockito
+
+### Android App Dependencies
+- Retrofit for API communication
+- Gson for JSON parsing
+- Material Design Components
+- AndroidX libraries
+- JUnit and Espresso for testing
+
+## Download Instructions
+
+1. Clone the repository:
    ```bash
    git clone https://github.com/your-username/JIB-4322-ELD.git
-   cd JIB-4322-ELD/backend
+   cd JIB-4322-ELD
    ```
 
-2. **Configure MongoDB Connection**
-   - Create a file named `secrets.properties` in the `src/main/resources` directory
-   - Add the following content (replace with your MongoDB connection string):
-     ```
-     spring.data.mongodb.uri=mongodb+srv://username:password@cluster.mongodb.net/eld_data?retryWrites=true&w=majority
-     ```
+## Build Instructions
 
-3. **Build the Backend**
+### Backend Build
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+
+2. Build the backend:
    ```bash
    ./gradlew build
    ```
 
-4. **Run the Backend**
-   ```bash
-   ./gradlew bootRun
-   ```
-   The backend server should start on `http://localhost:8080`
-
-## Android App Setup
-
-1. **Open the Android Project**
+### Android App Build
+1. Open the Android project in Android Studio:
    - Launch Android Studio
-   - Select "Open an existing Android Studio project"
-   - Navigate to and select the `android` directory in the cloned repository
+   - Open the `android` directory from the cloned repository
 
-2. **Configure API Endpoint**
+2. Build the Android app:
+   - Click on "Build" > "Make Project" in Android Studio
+
+## Installation Steps
+
+### Backend Installation
+1. Create a file named `secrets.properties` in the `backend/src/main/resources` directory with your MongoDB connection string:
+   ```
+   spring.data.mongodb.uri=mongodb+srv://username:password@cluster.mongodb.net/eld_data?retryWrites=true&w=majority
+   ```
+
+2. Ensure MongoDB is running on your system
+
+### Android App Installation
+1. Configure the API endpoint:
    - Open `app/src/main/java/com/michelin/connectedfleet/eld/network/ApiClient.java`
    - Update the `BASE_URL` constant to point to your backend server:
      ```java
      private static final String BASE_URL = "http://your-server-ip:8080/";
      ```
 
-3. **Build the Android App**
-   - Click on "Build" > "Make Project" in Android Studio
-   - Wait for the build to complete
-
-4. **Run the Android App**
-   - Connect an Android device or start an emulator
-   - Click on "Run" > "Run 'app'" in Android Studio
-   - Select your target device and click "OK"
-
-## Running the Application
+## Run Instructions
 
 ### Backend
-1. Ensure MongoDB is running
-2. Navigate to the backend directory
-3. Run `./gradlew bootRun`
-4. Verify the server is running by accessing `http://localhost:8080/health`
+1. Run the backend:
+   ```bash
+   ./gradlew bootRun
+   ```
+   The backend server will start on `http://localhost:8080`
 
 ### Android App
-1. Launch the app on your Android device
-2. Log in with your credentials
-3. The dashboard should display your current status and hours remaining
+1. Run the Android app:
+   - In Android Studio, create and start the Pixel Tablet API 34 emulator
+     - Go to Tools > Device Manager
+     - Click "Create Device"
+     - Select "Pixel Tablet" and use API 34 (Android 14.0)
+   - Click on "Run" > "Run 'app'" in Android Studio
+   - Select the Pixel Tablet API 34 emulator and click "OK"
 
 ## Troubleshooting
+
+### Common Issues and Solutions
+
+| Issue | Solution |
+|-------|----------|
+| Backend fails to start | Check MongoDB connection in `secrets.properties` |
+| App cannot connect to backend | Verify the `BASE_URL` in `ApiClient.java` |
+| Build failures | Run `./gradlew clean` and try again |
+| App crashes on launch | Check logcat output in Android Studio |
 
 
