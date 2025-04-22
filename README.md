@@ -47,6 +47,8 @@ The following issues were identified and fixed during development:
 
 ## Known Issues and Missing Features
 ### Current Issues
+- Full functionality only tested and verified on Pixel Tablet API 34 emulator; other devices may experience compatibility issues
+- Unexpected automatic logouts occur occasionally
 - Horizontal display issues in tablet view on certain resource files in Android Studio
 - Occasional connectivity issues with the backend service
 
