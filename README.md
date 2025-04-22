@@ -2,10 +2,10 @@
 First Release (Version 1.0)
 
 ## Description
-This repository contains the Electronic Logging Device (ELD) application built for Michelin Connected Fleet. The purpose of the ELD is to provide fleet managers with the data to track the current status of the drivers in their fleet. The ELD ensures drivers are tasked within the requirements of FMCSA regulations and are paid accordingly. The application tracks what the driver is currently doing, whether driving, taking a break, etc., and keeps track of these logs to ensure they work within FMCSA hourly regulations.
+This repository contains the Electronic Logging Device (ELD) application built for Michelin Connected Fleet. The purpose of the ELD is to provide fleet managers with the data to track the current status of the drivers in their fleet. The ELD ensures drivers are tasked within the requirements of FMCSA regulations and are paid accordingly. The application tracks what the driver is currently doing, such as driving, taking a break, etc.; and keeps track of these logs to ensure they work within FMCSA hourly regulations.
 
 ## Technology Stack
-- **Frontend**: Android Studio/Java
+- **Frontend**: Android Studio/Java (MVC model)
 - **Backend**: Spring Boot, MongoDB, Java
 - **Database**: MongoDB Atlas
 
@@ -48,7 +48,8 @@ The following issues were identified and fixed during development:
 ## Known Issues and Missing Features
 ### Current Issues
 - Full functionality only tested and verified on Pixel Tablet API 34 emulator; other devices may experience compatibility issues
-- Unexpected automatic logouts occur occasionally
+- Some layouts are only fully operational in horizontal mode
+- Unexpected automatic logouts occur occasionally, and are not always obvious
 - Horizontal display issues in tablet view on certain resource files in Android Studio
 - Occasional connectivity issues with the backend service
 

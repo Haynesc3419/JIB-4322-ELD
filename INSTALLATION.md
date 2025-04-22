@@ -22,12 +22,13 @@ This guide provides step-by-step instructions for setting up and running the Ele
 ### Software Requirements
 - **Java Development Kit (JDK)**: Version 21 or higher
   - Download from: [Oracle JDK](https://www.oracle.com/java/technologies/downloads/) or [OpenJDK](https://adoptium.net/)
-- **Gradle**: Version 8.0 or higher
-  - Download from: [Gradle](https://gradle.org/install/)
-- **MongoDB**: Version 6.0 or higher
-  - Download from: [MongoDB](https://www.mongodb.com/try/download/community)
 - **Android Studio**: Latest version
   - Download from: [Android Studio](https://developer.android.com/studio)
+- **Gradle**: Version 8.0 or higher
+  - Download from: [Gradle](https://gradle.org/install/)
+  - Can also be installed automatically using Android Studio
+- **MongoDB**: Version 6.0 or higher
+  - Download from: [MongoDB](https://www.mongodb.com/try/download/community)
 
 ## Dependent Libraries
 
@@ -76,16 +77,19 @@ The following libraries are automatically managed by Gradle and included in the 
 
 2. Build the Android app:
    - Click on "Build" > "Make Project" in Android Studio
+  
+Note: Alternatively, `gradle` can be used directly on the command line to build the Android App.
+This is not recommended, so instructions are not provided.
 
 ## Installation Steps
 
 ### Backend Installation
-1. Create a file named `secrets.properties` in the `backend/src/main/resources` directory with your MongoDB connection string:
+1. Create a file named `secrets.properties` in the `backend/src/main/resources` directory containing your MongoDB connection string:
    ```
-   spring.data.mongodb.uri=mongodb+srv://username:password@cluster.mongodb.net/eld_data?retryWrites=true&w=majority
+   spring.data.mongodb.uri=mongodb+srv://<username>:<password>@<cluster.mongodb.net>/eld_data?retryWrites=true&w=majority
    ```
 
-2. Ensure MongoDB is running on your system
+2. Ensure MongoDB is running on your system or that you have proper access to a cloud instance.
 
 ### Android App Installation
 1. Configure the API endpoint:
@@ -120,6 +124,7 @@ The following libraries are automatically managed by Gradle and included in the 
 | Issue | Solution |
 |-------|----------|
 | Backend fails to start | Check MongoDB connection in `secrets.properties` |
+| Backend errors out | If using MongoDB Atlas (Cloud) ensure your IP is whitelisted |
 | App cannot connect to backend | Verify the `BASE_URL` in `ApiClient.java` |
 | Build failures | Run `./gradlew clean` and try again |
 | App crashes on launch | Check logcat output in Android Studio |
