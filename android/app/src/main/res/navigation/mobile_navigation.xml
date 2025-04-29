@@ -24,6 +24,12 @@
             tools:layout="@layout/fragment_status" />
 
     <fragment
+        android:id="@+id/nav_vehicle_information"
+        android:name="com.michelin.connectedfleet.eld.ui.vehicleinfo.VehicleInfoFragment"
+        android:label="@string/vehicle_info"
+        tools:layout="@layout/fragment_vehicle_info" />
+
+    <fragment
             android:id="@+id/nav_settings"
             android:name="com.michelin.connectedfleet.eld.ui.settings.SettingsFragment"
             android:label="@string/menu_settings"

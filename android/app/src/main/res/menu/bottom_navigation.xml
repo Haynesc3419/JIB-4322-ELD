@@ -20,6 +20,11 @@
             android:title="@string/nav_log_book" />
 
         <item
+            android:id="@+id/nav_vehicle_information"
+            android:icon="@drawable/local_shipping_24px"
+            android:title="@string/vehicle_info" />
+
+        <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings_black_24dp"
             android:title="@string/nav_settings" />

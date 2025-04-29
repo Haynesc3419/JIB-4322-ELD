@@ -36,6 +36,7 @@ import com.michelin.connectedfleet.eld.ui.data.retrofitinterface.CreateLogEntryR
 import com.michelin.connectedfleet.eld.ui.data.retrofitinterface.GetLogEntryResponseItem;
 import com.michelin.connectedfleet.eld.ui.data.util.TimerManager;
 import com.michelin.connectedfleet.eld.ui.status.StatusViewModel;
+import com.michelin.connectedfleet.eld.ui.vehicleinfo.VehicleInfoViewModel;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -102,7 +103,6 @@ public class HomeFragment extends Fragment {
         String cookieHeader = String.format("JSESSIONID=%s", token);
         Call<List<GetLogEntryResponseItem>> logEntriesRequest = logsService.getLogEntries(cookieHeader);
 
-
         homeViewModel.hoursRemaining.breakHoursRemaining.observe(
                 getViewLifecycleOwner(),
                 homeViewModel.hoursRemaining.createObserver(binding.progressHoursRemainingBreak, binding.textHoursRemainingBreak)
@@ -146,7 +146,9 @@ public class HomeFragment extends Fragment {
                 String token2 = prefs.getString("token", null);
                 String cookieHeader2 = String.format("JSESSIONID=%s", token);
 
-                logsService.insert(new CreateLogEntryRequest(status.toString(), cookieHeader2)).enqueue(new Callback<CreateLogEntryResponse>() {
+                VehicleInfoViewModel vehicleInfoViewModel = new ViewModelProvider(this).get(VehicleInfoViewModel.class);
+                float currentOdometer = vehicleInfoViewModel.getVehicle().getValue().getOdometer();
+                logsService.insert(new CreateLogEntryRequest(status.toString(), currentOdometer, cookieHeader2)).enqueue(new Callback<CreateLogEntryResponse>() {
                     @Override
                     public void onResponse(Call<CreateLogEntryResponse> call, Response<CreateLogEntryResponse> response) {
                         return;

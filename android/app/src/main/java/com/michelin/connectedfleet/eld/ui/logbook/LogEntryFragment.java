@@ -1,6 +1,8 @@
 package com.michelin.connectedfleet.eld.ui.logbook;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +25,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 import com.michelin.connectedfleet.eld.R;
 import com.michelin.connectedfleet.eld.ui.data.LogEntryService;
+import com.michelin.connectedfleet.eld.ui.data.MetricConversionHelper;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -128,7 +131,7 @@ public class LogEntryFragment extends DialogFragment {
         Log.d(TAG, "Parsing log entries: " + logEntries);
 
         // Regex to extract id, status, dateTime, verifiedByDriver
-        String regex = "GetLogEntryResponseItem\\[id=([^,]*?), status=([^,]*?), dateTime=([^,]*?), verifiedByDriver=(.*?)\\]";
+        String regex = "GetLogEntryResponseItem\\[id=([^,]*?), odometerReading=(.+?), status=([^,]*?), dateTime=([^,]*?), verifiedByDriver=(.*?)\\]";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(logEntries);
 
@@ -142,9 +145,10 @@ public class LogEntryFragment extends DialogFragment {
             counter++;
             try {
                 String id = matcher.group(1).trim();
-                String status = matcher.group(2).trim();
-                String dateTimeString = matcher.group(3).trim();
-                String verifiedByDriverStr = matcher.group(4) != null ? matcher.group(4).trim() : "0"; // Default to 0 if null
+                float odometerReading = Float.parseFloat(matcher.group(2).trim());
+                String status = matcher.group(3).trim();
+                String dateTimeString = matcher.group(4).trim();
+                String verifiedByDriverStr = matcher.group(4) != null ? matcher.group(5).trim() : "0"; // Default to 0 if null
                 boolean isVerified = "1".equals(verifiedByDriverStr);
 
                 LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, inputFormatter);
@@ -153,7 +157,7 @@ public class LogEntryFragment extends DialogFragment {
                 this.ids.add(id);
                 this.signedStatus.add(isVerified);
 
-                addLogEntryView(counter, id, status, formattedTime, isVerified);
+                addLogEntryView(counter, id, odometerReading, status, formattedTime, isVerified);
 
             } catch (Exception e) {
                 Log.e(TAG, "Error parsing log entry match: " + matcher.group(0), e);
@@ -172,7 +176,7 @@ public class LogEntryFragment extends DialogFragment {
         updateSignButtonState();
     }
 
-    private void addLogEntryView(int index, String id, String status, String time, boolean isVerified) {
+    private void addLogEntryView(int index, String id, float odometerReading, String status, String time, boolean isVerified) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         // Inflate a dedicated layout for each log entry item for better structure (optional but recommended)
         // For now, creating TextViews dynamically
@@ -187,7 +191,10 @@ public class LogEntryFragment extends DialogFragment {
         int signedTextColor = isVerified ? R.color.status_valid : R.color.status_warning; // Use your color resources
 
         TextView entryDetails = new TextView(getContext());
-        entryDetails.setText(String.format("%d. ID: %s\n   Status: %s\n   Time: %s", index, truncatedId, status, time));
+        SharedPreferences unitSettings = getActivity().getSharedPreferences("unit_settings", Context.MODE_PRIVATE);
+        boolean useMetric = unitSettings.getBoolean("use_metric", false);
+        entryDetails.setText(String.format("%d. ID: %s\n   Odometer: %s\n   Status: %s\n   Time: %s",
+                index, truncatedId, MetricConversionHelper.getDistanceWithUnit(odometerReading, useMetric), status, time));
         // Use AppCompat style as a fallback
         entryDetails.setTextAppearance(androidx.appcompat.R.style.TextAppearance_AppCompat_Body1);
         entryLayout.addView(entryDetails);

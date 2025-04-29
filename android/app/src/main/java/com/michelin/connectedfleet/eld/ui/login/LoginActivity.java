@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
 
         SharedPreferences prefs = getApplicationContext().getSharedPreferences("tokens", Context.MODE_PRIVATE);
         String token = prefs.getString("token", null);
-        if (token != null) {
+        if (token != null && !token.trim().isBlank()) {
             Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
             LoginActivity.this.startActivity(myIntent);
             finish();

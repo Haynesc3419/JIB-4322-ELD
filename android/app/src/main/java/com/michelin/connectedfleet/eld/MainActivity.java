@@ -92,6 +92,9 @@ public class MainActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.nav_log_book) {
             NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
             navController.navigate(R.id.nav_log_book);
+        } else if (item.getItemId() == R.id.nav_vehicle_information) {
+            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+            navController.navigate(R.id.nav_vehicle_information);
         }
         return super.onOptionsItemSelected(item);
     }

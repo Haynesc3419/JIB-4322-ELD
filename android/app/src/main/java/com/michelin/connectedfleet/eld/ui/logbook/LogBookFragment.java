@@ -72,7 +72,7 @@ public class LogBookFragment extends Fragment {
         Bundle args = new Bundle();
 
         args.putString("date", loggedDay.date().toString());
-        args.putString("log_entries", loggedDay.logEntries().toString()); // A// djust as needed
+        args.putString("log_entries", loggedDay.logEntries().toString()); // Adjust as needed
         logEntryFragment.setArguments(args);
         logEntryFragment.show(getParentFragmentManager(), "LogEntryFragment");
     };
@@ -82,7 +82,7 @@ public class LogBookFragment extends Fragment {
         View root = binding.getRoot();
 
         RecyclerView recyclerView = binding.recyclerviewLogs;
-        LogsAdapter adapter = new LogsAdapter(getResources().getConfiguration().getLocales().get(0), logClickListener);
+        LogsAdapter adapter = new LogsAdapter(getResources().getConfiguration().getLocales().get(0), logClickListener, getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 

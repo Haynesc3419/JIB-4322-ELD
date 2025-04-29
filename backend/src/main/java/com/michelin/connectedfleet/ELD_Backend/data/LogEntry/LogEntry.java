@@ -10,13 +10,15 @@ public class LogEntry {
     @MongoId
     private String id;
     private String username;
+    private float odometerReading;
     private LocalDateTime dateTime;
     private String status;
 
     private String verifiedByDriver;
 
-    public LogEntry(String username, String status, String verifiedByDriver) {
+    public LogEntry(String username, float odometerReading, String status, String verifiedByDriver) {
         this.username = username;
+        this.odometerReading = odometerReading;
         this.dateTime = LocalDateTime.now();
         this.status = status;
         this.verifiedByDriver = verifiedByDriver;
@@ -29,6 +31,8 @@ public class LogEntry {
     public String getStatus() {
         return status;
     }
+
+    public float getOdometerReading() { return odometerReading; }
 
     public String getId() {
         return id;

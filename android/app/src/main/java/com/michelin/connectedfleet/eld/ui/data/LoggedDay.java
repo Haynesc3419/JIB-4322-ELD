@@ -38,6 +38,18 @@ public record LoggedDay (
         return String.format(locale, "%2d:%02d", totalMinutes / 60, totalMinutes % 60);
     }
 
+    public float getDistanceDriven() {
+        float startOdometer = 0f;
+        float endOdometer = 0f;
+
+        for (GetLogEntryResponseItem logEntry : logEntries) {
+            startOdometer = Math.min(startOdometer, logEntry.odometerReading());
+            endOdometer = Math.max(endOdometer, logEntry.odometerReading());
+        }
+
+        return endOdometer - startOdometer;
+    }
+
     public String getMonthAbbreviation() {
         return DateTimeFormatter.ofPattern("MMM", locale).format(date);
     }

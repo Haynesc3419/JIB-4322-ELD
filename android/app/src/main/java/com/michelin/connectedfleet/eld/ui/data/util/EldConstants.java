@@ -24,4 +24,4 @@ public class EldConstants {
     private EldConstants() {
         // Private constructor to prevent instantiation
     }
-} 
+}

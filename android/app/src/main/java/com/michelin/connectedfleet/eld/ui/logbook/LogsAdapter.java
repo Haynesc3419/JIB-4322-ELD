@@ -1,27 +1,28 @@
 package com.michelin.connectedfleet.eld.ui.logbook;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.michelin.connectedfleet.eld.databinding.ItemLogsBinding;
 import com.michelin.connectedfleet.eld.ui.data.LoggedDay;
+import com.michelin.connectedfleet.eld.ui.data.MetricConversionHelper;
 
-import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public class LogsAdapter extends ListAdapter<LoggedDay, LogsAdapter.LogsViewHolder> {
     private static Locale locale;
     private final OnLogClickListener onLogClickListener;
+    private final Context context;
 
-    protected LogsAdapter(Locale locale, OnLogClickListener onLogClickListener) {
+    protected LogsAdapter(Locale locale, OnLogClickListener onLogClickListener, Context context) {
         super(new DiffUtil.ItemCallback<>() {
             @Override
             public boolean areItemsTheSame(@NonNull LoggedDay oldItem, @NonNull LoggedDay newItem) {
@@ -34,6 +35,7 @@ public class LogsAdapter extends ListAdapter<LoggedDay, LogsAdapter.LogsViewHold
             }
         });
 
+        this.context = context;
         LogsAdapter.locale = locale;
         this.onLogClickListener = onLogClickListener;
     }
@@ -55,7 +57,11 @@ public class LogsAdapter extends ListAdapter<LoggedDay, LogsAdapter.LogsViewHold
         LoggedDay item = getItem(position); // Use getItem() instead of custom list
         holder.calendarDayView.setText(String.valueOf(item.date().getDayOfMonth()));
         holder.calendarMonthView.setText(item.getMonthAbbreviation());
-        holder.detailsView.setText("Drove for " + item.getTimeDriven());
+        String detailsText = "Drove for " + item.getTimeDriven();
+        SharedPreferences unitSettings = context.getSharedPreferences("unit_settings", Context.MODE_PRIVATE);
+        boolean useMetric = unitSettings.getBoolean("use_metric", false);
+        detailsText += " and " + MetricConversionHelper.getDistanceWithUnit(item.getDistanceDriven(), useMetric) + ".";
+        holder.detailsView.setText(detailsText);
 
         // Set click listener
         holder.itemView.setOnClickListener(v -> onLogClickListener.onLogClick(item));

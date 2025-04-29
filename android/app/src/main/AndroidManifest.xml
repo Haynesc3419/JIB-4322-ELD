@@ -22,7 +22,7 @@
         <activity
                 android:name=".ui.login.LoginActivity"
                 android:exported="true"
-                android:label="@string/title_activity_login"
+                android:label="MCF ELD"
                 android:configChanges="orientation|screenSize"
                 android:theme="@style/Theme.MichelinConnectedFleetELD.NoActionBar">
             <intent-filter>

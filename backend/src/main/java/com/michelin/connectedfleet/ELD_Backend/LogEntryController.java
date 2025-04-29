@@ -38,7 +38,12 @@ public class LogEntryController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         String token = (session.isNew()) ? entryRequest.token() : (String)(session.getAttribute("username"));
-        LogEntry entry = new LogEntry((String)(session.getAttribute("username")), entryRequest.status(), "0");
+        LogEntry entry = new LogEntry(/*(String)(session.getAttribute("username"))*/
+                "user01@example.com",
+                entryRequest.odometerReading(),
+                entryRequest.status(),
+                "0");
+
         logEntryRepository.insert(entry);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
