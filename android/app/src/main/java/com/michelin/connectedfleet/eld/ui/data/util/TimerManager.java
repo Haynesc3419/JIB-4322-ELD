@@ -10,6 +10,7 @@ import com.michelin.connectedfleet.eld.ui.home.HomeViewModel;
 import com.michelin.connectedfleet.eld.ui.data.NotificationHelper;
 
 import java.time.LocalTime;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,11 +22,14 @@ public class TimerManager {
     // private static final long CRITICAL_THRESHOLD = 30 * 60 * 1000;  // 30 minutes
     // private static final long WARNING_THRESHOLD = 60 * 60 * 1000;   // 1 hour
     // private static final long NOTICE_THRESHOLD = 120 * 60 * 1000;   // 2 hours
-    
+
     // Demo thresholds
     private static final long CRITICAL_THRESHOLD = 53 * 60 * 1000;  // 57 minutes
     private static final long WARNING_THRESHOLD = 58 * 60 * 1000;   // 58 minutes
     private static final long NOTICE_THRESHOLD = 59 * 60 * 1000;    // 59 minutes
+
+    private final Calendar CONFIGURED_CLOCK_OUT_REMINDER;
+
     private static final String TAG = "TimerManager";
     private Map<String, Boolean> notificationSent = new HashMap<>();
 
@@ -37,6 +41,17 @@ public class TimerManager {
         notificationSent.put("critical", false);
         notificationSent.put("warning", false);
         notificationSent.put("notice", false);
+        notificationSent.put("reminder", false);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 18); // 9 AM
+        calendar.set(Calendar.MINUTE, 25);
+        calendar.set(Calendar.SECOND, 0);
+
+        if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_YEAR, 1); // Schedule for the next day
+        }
+        CONFIGURED_CLOCK_OUT_REMINDER = calendar;
     }
 
     public static TimerManager getInstance() {
@@ -79,6 +94,13 @@ public class TimerManager {
             NotificationHelper.showDrivingLimitNotification(applicationContext, remainingTimeStr, false);
             notificationSent.put("notice", true);
         }
+
+        if (CONFIGURED_CLOCK_OUT_REMINDER.getTimeInMillis() < System.currentTimeMillis()
+                && !notificationSent.get("reminder")) {
+            Log.i(TAG, "Sending REMINDER notification");
+            NotificationHelper.showDayEndReminderNotification(applicationContext);
+            notificationSent.put("reminder", true);
+        }
     }
 
     private void resetNotificationFlags() {
@@ -90,7 +112,8 @@ public class TimerManager {
     }
 
     public void startTimer(String timerId, long durationMillis) {
-        if (timers.containsKey(timerId) && timers.get(timerId).isRunning) return; // Prevent duplicate running timers
+        if (timers.containsKey(timerId) && timers.get(timerId).isRunning)
+            return; // Prevent duplicate running timers
 
         TimerData timerData = timers.getOrDefault(timerId, new TimerData(durationMillis));
         CountDownTimer countDownTimer = createCountDownTimer(timerId, timerData.timeLeft);

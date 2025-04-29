@@ -3,7 +3,6 @@ package com.michelin.connectedfleet.eld;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
@@ -18,7 +17,8 @@ import java.util.concurrent.TimeUnit;
 
 public class MyApplication extends Application {
     private static final String TAG = "MyApplication";
-    public static final String CHANNEL_ID = "driving_limit_channel";
+    public static final String LIMIT_CHANNEL_ID = "driving_limit_channel";
+    public static final String DAY_END_CHANNEL_ID = "day_end_reminder_channel";
     private TimeZoneManager timeZoneManager;
 
     @Override
@@ -44,15 +44,22 @@ public class MyApplication extends Application {
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
+                    LIMIT_CHANNEL_ID,
                     "Driving Limit Notifications",
                     NotificationManager.IMPORTANCE_DEFAULT
             );
             channel.setDescription("Notifications for driving time limits");
-            
+            NotificationChannel reminderChannel = new NotificationChannel(
+                    DAY_END_CHANNEL_ID,
+                    "Day end Notifications",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            reminderChannel.setDescription("Reminders to clock out at day end");
+
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             if (notificationManager != null) {
                 notificationManager.createNotificationChannel(channel);
+                notificationManager.createNotificationChannel(reminderChannel);
                 Log.d(TAG, "Notification channel created successfully");
             } else {
                 Log.e(TAG, "Failed to create notification channel: NotificationManager is null");
